@@ -1,6 +1,15 @@
 {
-    "propiedades":{
-        "usuario":[]
-
+    "propiedades": {
+        "usuario": [
+            {
+                "Identificacion": "305280498",
+                "ID del sitio": 123,
+                "Tipo de Propiedad": "Oficina",
+                "Ubicacion": "Cartago",
+                "Cantidad maxima de personas": 5,
+                "Precio por noche": 5000,
+                "Contacto": 63368175
+            }
+        ]
     }
 }

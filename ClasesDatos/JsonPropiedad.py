@@ -4,7 +4,7 @@ import json
 class JsonPropiedad:
 
 
-    def __init__(self, archivo="Datos/Archivos/propiedades.json"):
+    def __init__(self, archivo="ClasesDatos/Archivos/propiedades.json"):
         self.archivo = archivo
         if not os.path.exists(self.archivo):
             estructura = {
@@ -47,13 +47,13 @@ class JsonPropiedad:
         with open(self.archivo, "r", encoding="utf-8") as f: return json.load(f)
 
     
-    def editar_propiedad(self, identificacion, id_sitio, tipo_propie, ubicacion, maxima_personas, precio_noche, contacto):
+    def editar_propiedad(self, id_sitio, tipo_propie, ubicacion, maxima_personas, precio_noche, contacto):
 
         datos = self.leer_propiedades()
         lista_propiedades = datos["propiedades"]["usuario"]
 
         for propiedad in lista_propiedades:
-            if propiedad["Identificacion"] == str(identificacion) and propiedad["ID del sitio"] == id_sitio:
+            if propiedad["ID del sitio"] == int(id_sitio):
                 propiedad["ID del sitio"] = int(id_sitio)
                 propiedad["Tipo de Propiedad"] = tipo_propie
                 propiedad["Ubicacion"] = ubicacion

@@ -9,4 +9,3 @@ def borrarPantalla():
 
 if __name__ == "__main__":
     InicioSesion()
-    #main()

@@ -62,9 +62,9 @@ class PaginaPrincipal:
 
 
         #region Submenu propiedad
-        menu_propiedades.add_command(label="Registrar", command=self.ventanaRegistrarReserva) #Agrega las opciones que estaran en el boton de Clientes generado por MSmenu, mas genera la accion para el boton
-        menu_propiedades.add_command(label="Editar", command=self.ventanaEditarReserva)
-        menu_propiedades.add_command(label="Eliminar", command=self.ventanaEliminarReserva)
+        menu_propiedades.add_command(label="Registrar", command=self.ventanaRegistrarPropiedad) #Agrega las opciones que estaran en el boton de Clientes generado por MSmenu, mas genera la accion para el boton
+        menu_propiedades.add_command(label="Editar", command=self.ventanaEditarPropiedades)
+        menu_propiedades.add_command(label="Eliminar", command=self.ventanaEliminarPropiedad)
         #endregion
 
 

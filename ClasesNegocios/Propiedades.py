@@ -1,11 +1,11 @@
 from ClasesDatos.JsonPropiedad import JsonPropiedad
-from Validadores.ValidadorPropiedades import ValidadorPropiedades
-from Validadores.ValidadorReservas import ValidadorReservas
+from ClasesNegocios.Validadores import ValidadorPropiedades
+from ClasesNegocios.Validadores import ValidadorReservas
 
 class Propiedades:
     # Metodo constructor
     def __init__(self,identificacion, id_sitio, tipo_propie, ubicacion, maxima_personas, precio_noche,contacto):
-        self.__identificacion_dueno= identificacion
+        self.__identificacion= identificacion
         self.__id_sitio = id_sitio
         self.__tipo_propie = tipo_propie
         self.__ubicacion = ubicacion
@@ -39,7 +39,7 @@ class Propiedades:
     def Tipo_propie(self):
         return self.__tipo_propie
     @Tipo_propie.setter
-    def Identificacion(self, valor):
+    def Tipo_propie(self, valor):
         self.__tipo_propie = valor
 
 
@@ -72,31 +72,36 @@ class Propiedades:
         return self.__contacto
     @Contacto.setter
     def contacto(self, valor):
-        self.__contacto = valor##
+        self.__contacto = valor
 
 
     def buscar_precio(self):
         propiedad = JsonPropiedad()
         return propiedad.buscar_precio(self.ID_Sitio)
 
-    
-    def leer_propiedades(self):
+
+    @classmethod
+    def leer_propiedades(cls):
         propiedad = JsonPropiedad()
         return propiedad.leer_propiedades()
 
     
     def registrar_propiedad(self): 
         propiedad= JsonPropiedad()
-        ValidadorReservas.validar_identificacion(self.Identificacion)
-        ValidadorPropiedades.validar_propiedad(self.Tipo_propie, self.Ubicacion, self.Maxima_personas, self.Precio_noche, self.Contacto)
+        ValidadorReservas.ValidadorReservas.validar_identificacion(int(self.Identificacion))
+        ValidadorPropiedades.ValidadorPropiedades.validar_propiedad(self.Tipo_propie, self.Ubicacion, self.Maxima_personas, self.Precio_noche, self.Contacto)
+
+
         propiedad.registrar_propiedad(self.Identificacion, self.ID_Sitio, self.Tipo_propie, self.Ubicacion,
-                                      self.Ubicacion, self.Maxima_personas, self.Precio_noche, self.contacto)
+                                      self.Maxima_personas, self.Precio_noche, self.contacto)
 
 
-    def editar_propiedad(self):
+    @classmethod
+    def editar_propiedad(cls, id_sitio, tipo_propie, ubicacion, maxima_personas, precio_noche, contacto):
         propiedad= JsonPropiedad()
-        propiedad.editar_propiedad(self.Identificacion, self.ID_Sitio, self.Tipo_propie, self.Ubicacion,
-                                   self.Maxima_personas, self.Precio_noche, self.contacto)
+        return propiedad.editar_propiedad(id_sitio, tipo_propie, ubicacion,
+                                   maxima_personas, precio_noche, contacto)
+
 
 
     def eliminar_propiedad(self):

@@ -4,7 +4,7 @@ import json
 class JsonReservaciones:
 
 
-    def __init__(self, archivo="Datos/Archivos/reservaciones.json"):
+    def __init__(self, archivo="ClasesDatos/Archivos/reservaciones.json"):
         self.archivo = archivo
         if not os.path.exists(self.archivo):
             estructura = {

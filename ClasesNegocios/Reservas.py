@@ -1,6 +1,7 @@
-from ClasesDatos.JsonReservaciones import *
-from Validadores.ValidadorReservas import *
-import datetime
+from ClasesDatos.JsonReservaciones import JsonReservaciones
+from ClasesNegocios.Validadores import ValidadorReservas
+
+
 class Reservas:
     def __init__(self, identificacion, id_sitio, fecha_entrada, fecha_salida, disponible, cantidad_personas, total):
         self.__identificacion = identificacion
