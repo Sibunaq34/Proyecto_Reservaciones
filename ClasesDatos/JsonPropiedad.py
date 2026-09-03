@@ -51,7 +51,7 @@ class JsonPropiedad:
 
         datos = self.leer_propiedades()
         lista_propiedades = datos["propiedades"]["usuario"]
-
+        id_sitio == int(id_sitio)
         for propiedad in lista_propiedades:
             if propiedad["ID del sitio"] == int(id_sitio):
                 propiedad["ID del sitio"] = int(id_sitio)
@@ -63,7 +63,7 @@ class JsonPropiedad:
 
             with open(self.archivo, "w", encoding="utf-8") as f:
                 json.dump(datos, f, indent=4)
-            return propiedad
+        return propiedad
 
     
     def eliminar_propiedad(self, id_sitio):

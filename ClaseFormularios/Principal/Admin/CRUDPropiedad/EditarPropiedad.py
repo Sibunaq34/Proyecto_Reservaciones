@@ -62,7 +62,7 @@ class EditarPropiedades(tk.Toplevel):
         self.txt_contacto = tk.Entry(self)
         self.txt_contacto.grid(row=9,column=1, sticky="W")
         
-        self.btn_registrar = tk.Button(self, text="Registrar Propiedad", command= self.editar_propiedades, bg="#666a88", fg="#fcfcfc")
+        self.btn_registrar = tk.Button(self, text="Editar Propiedad", command= self.editar_propiedades, bg="#666a88", fg="#fcfcfc")
         self.btn_registrar.grid(row=10, columnspan=2, sticky=("W"))
         self.mostrarDatos()
 
@@ -114,10 +114,10 @@ class EditarPropiedades(tk.Toplevel):
     def editar_propiedades (self):
 
         try:
-            propiedad= Propiedades.editar_propiedad(self.txt_id_sitio.get(),self.txt_tipo_propie.get(), self.txt_ubicacion.get(),int(self.txt_cantidad_maxima_personas.get()), int(self.txt_precio_noche.get()),int(self.txt_contacto.get()))
+            propiedad= Propiedades.editar_propiedad(int(self.txt_id_sitio.get()),self.txt_tipo_propie.get(), self.txt_ubicacion.get(),int(self.txt_cantidad_maxima_personas.get()), int(self.txt_precio_noche.get()),int(self.txt_contacto.get()))
             if propiedad:
-                self.mostrarDatos()
-                self.limpiarCampos()
+                messagebox.showinfo(message="Se ha realizado la correccion",title="Operacion:")
+                self.destroy()
 
         except Exception as e:
             messagebox.showerror(message=str(e),title="Ha ocurrido un error:")

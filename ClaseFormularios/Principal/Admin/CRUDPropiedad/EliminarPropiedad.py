@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from tkinter.font import BOLD
-from ClasesDatos.JsonPropiedad import JsonPropiedad
 from ClasesNegocios.Propiedades import Propiedades
 
 class EliminarPropiedades(tk.Toplevel): 
@@ -31,10 +30,12 @@ class EliminarPropiedades(tk.Toplevel):
         self.tabla.heading("col6", text="CONTACTO")
         self.tabla["show"] = "headings"
         self.tabla.bind("<ButtonRelease-1>", self.seleccionarPropiedadesTabla)
-        lblid = tk.Label(self, text="ID:",font=("Times", 14), fg="#666a88", anchor="w")
-        lblid.grid(row=2,column=0, sticky="W")
-        self.txt_id = tk.Entry(self)
-        self.txt_id.grid(row=2,column=1, sticky="W")
+
+
+        lbl_id_sitio = tk.Label(self, text="ID:",font=("Times", 14), fg="#666a88", anchor="w")
+        lbl_id_sitio.grid(row=2,column=0, sticky="W")
+        self.txt_id_sitio = tk.Entry(self)
+        self.txt_id_sitio.grid(row=2,column=1, sticky="W")
 
         lbl_tipo_propie = tk.Label(self, text="Tipo de propiedad:",font=("Times", 12), fg="#666a88", anchor="w")
         lbl_tipo_propie.grid(row=3,column=0, sticky="W")
@@ -66,7 +67,7 @@ class EliminarPropiedades(tk.Toplevel):
         self.mostrarDatos()
 
     def limpiarCampos(self):
-        self.txt_id.delete(0, tk.END)
+        self.txt_id_sitio.delete(0, tk.END)
         self.txt_tipo_propie.delete(0, tk.END)
         self.txt_ubicacion.delete(0, tk.END)
         self.txt_cantidad_maxima_personas.delete(0, tk.END)
@@ -75,28 +76,28 @@ class EliminarPropiedades(tk.Toplevel):
 
     def mostrarDatos(self):
 
-        jsonpropiedad = JsonPropiedad()
-        propiedades= jsonpropiedad.leerPropiedades()
+        propiedades = Propiedades.leer_propiedades()
+        propiedades= propiedades["propiedades"]["usuario"]
 
         for item in self.tabla.get_children():
             self.tabla.delete(item)
 
         for propiedad in propiedades:
             self.tabla.insert("",tk.END, values=(
-                propiedad.get("ID:",""),
-                propiedad.get("Tipo de Propiedad:",""),
-                propiedad.get("Ubicacion:",""),
-                propiedad.get("Cantidad maxima de personas:", ""),
-                propiedad.get("Precio por noche:",""),
-                propiedad.get("Contacto:", "")
+                propiedad.get("ID del sitio",""),
+                propiedad.get("Tipo de Propiedad",""),
+                propiedad.get("Ubicacion",""),
+                propiedad.get("Cantidad maxima de personas", ""),
+                propiedad.get("Precio por noche",""),
+                propiedad.get("Contacto", "")
             ))
     
     def seleccionarPropiedadesTabla(self, event):
         item = self.tabla.focus()
         if item:
             valores = self.tabla.item(item, "values")
-            self.txt_id.delete(0, tk.END)
-            self.txt_id.insert(0, valores[0])
+            self.txt_id_sitio.delete(0, tk.END)
+            self.txt_id_sitio.insert(0, valores[0])
             self.txt_tipo_propie.delete(0, tk.END)
             self.txt_tipo_propie.insert(0, valores[1])
             self.txt_ubicacion.delete(0, tk.END)
@@ -112,23 +113,11 @@ class EliminarPropiedades(tk.Toplevel):
     def eliminarPropiedades (self):
 
         try:
-            propiedad= Propiedades(int(self.txt_id.get()),self.txt_tipo_propie.get(), self.txt_ubicacion.get(),int(self.txt_cantidad_maxima_personas.get()), int(self.txt_precio_noche.get()),int(self.txt_contacto.get()))
-            jsonpropiedades = JsonPropiedad()
-            if jsonpropiedades.eliminarPropiedad(propiedad):
-                self.mostrarDatos()
-                self.limpiarCampos()
+            propiedad = Propiedades.eliminar_propiedad(self.txt_id_sitio.get())
+            if propiedad == True:
+                messagebox.showinfo(message="Fue eliminado exitosamente",title="Operacion:")
+                self.destroy()
 
         except Exception as e:
             messagebox.showerror(message=str(e),title="Ha ocurrido un error:")
             self.destroy()
-
-
-
-
-
-
-
-
-
-
-

@@ -116,8 +116,9 @@ class RegistrarPropiedad(tk.Toplevel):
 
                     propiedad= Propiedades(identificacion, id_sitio, tipo_propie, ubicacion, cantidad_maxima, precio_noche, contacto)
                     propiedad.registrar_propiedad()
-                    self.mostrarDatos()
-                    self.limpiarCampos() 
+                    messagebox.showinfo(message="Se ha registrado exitosamente",title="Operacion:")
+                    self.destroy()
+                    
                 else:
                     messagebox.showerror(title="Error", message="La identificacion no esta registrada como dueño")
                     self.destroy()

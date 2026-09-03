@@ -1,5 +1,24 @@
 {
-"Reservaciones":{
-    "Clientes":[]
+    "Reservaciones": {
+        "Clientes": [
+            {
+                "Identificacion": "305280498",
+                "ID del Sitio": 124,
+                "Fecha de entrada": "11/11/2026",
+                "Fecha de salida": "16/11/2026",
+                "Disponibilidad": "No",
+                "Cantidad de personas": 5000,
+                "Total": 25000
+            },
+            {
+                "Identificacion": "305280498",
+                "ID del Sitio": 124,
+                "Fecha de entrada": "17/11/2026",
+                "Fecha de salida": "19/11/2026",
+                "Disponibilidad": "No",
+                "Cantidad de personas": 3,
+                "Total": 10000
+            }
+        ]
     }
 }

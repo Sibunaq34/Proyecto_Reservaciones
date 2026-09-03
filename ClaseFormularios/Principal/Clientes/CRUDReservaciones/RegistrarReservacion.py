@@ -88,10 +88,10 @@ class RegistrarReservacion(tk.Toplevel):
 
         for propiedad in propiedades:
             self.tabla.insert("",tk.END, values=(
-                propiedad.get("ID del sitio:",""),
-                propiedad.get("Tipo de Propiedad:",""),
-                propiedad.get("Ubicacion:",""),
-                propiedad.get("Cantidad maxima de personas:", ""),
+                propiedad.get("ID del sitio",""),
+                propiedad.get("Tipo de Propiedad",""),
+                propiedad.get("Ubicacion",""),
+                propiedad.get("Cantidad maxima de personas", ""),
                 propiedad.get("Precio por noche:",""),
                 propiedad.get("Contacto:", "")
             ))
@@ -107,7 +107,6 @@ class RegistrarReservacion(tk.Toplevel):
     def registraReservacion (self):
 
         try:
-            reservacion = Reservas()
             cliente= ArchivoClientes()
             if self.txt_id.get() and self.txt_id_sitio.get() and self.txt_fecha_entrada.get() and self.txt_fecha_salida.get() and self.txt_cantidad_personas.get():
                 identificacion = int(self.txt_id.get())
@@ -122,7 +121,8 @@ class RegistrarReservacion(tk.Toplevel):
                         return
                     cantidad_personas = int(self.txt_cantidad_personas.get())
                     disponible = "No"
-                    reservacion.registrar_reserva(identificacion, id_sitio, fecha_entrada, fecha_salida, disponible, cantidad_personas, self.precio)
+                    reservacion = Reservas(identificacion, id_sitio, fecha_entrada, fecha_salida, disponible, cantidad_personas, self.precio)
+                    reservacion.registrar_reserva()
                     self.mostrarPropiedades()
                     self.limpiarCampos() 
                 else:

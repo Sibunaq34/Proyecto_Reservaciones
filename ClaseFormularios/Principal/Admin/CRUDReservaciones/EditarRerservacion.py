@@ -2,10 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from tkinter.font import BOLD
-from datetime import datetime
-from ClasesDatos.JsonReservaciones import *
-from ClasesDatos.JsonPropiedad import *
-from ClasesDatos.Clientes import ArchivoClientes
+from ClasesNegocios.Propiedades import Propiedades
 from ClasesNegocios.Reservas import Reservas
 
 
@@ -83,16 +80,15 @@ class EditarReservacion(tk.Toplevel):
 
     def mostrarReservacion(self):
 
-        jsonreservacion = JsonReservaciones()
-        reservaciones = jsonreservacion.leerReserva()
+        reservaciones = Reservas.leer_reserva()
 
         for item in self.tabla.get_children():
             self.tabla.delete(item)
 
         for reserva in reservaciones:
             self.tabla.insert("",tk.END, values=(
-                reserva.get("Identificacion del cliente",""),
-                reserva.get("ID Sitio",""),
+                reserva.get("Identificacion",""),
+                reserva.get("ID del Sitio",""),
                 reserva.get("Fecha de entrada",""),
                 reserva.get("Fecha de salida", ""),
                 reserva.get("Disponibilidad",""),
@@ -117,27 +113,16 @@ class EditarReservacion(tk.Toplevel):
 
     def editarReservacion(self):        
         try:
-            identificacion = int(self.txt_id.get())
+            identificacion = self.txt_id.get()
             id_sitio = int(self.txt_id_sitio.get())
             fecha_entrada = self.txt_fecha_entrada.get()
             fecha_salida = self.txt_fecha_salida.get()
-            cantidad_personas = int(self.txt_cantidad_personas.get())
-
-            jsonreservaciones = JsonReservaciones()
-            jsonpropiedad = JsonPropiedad()
-            self.precio = jsonpropiedad.buscarPrecio(id_sitio)
-            dia1 = datetime.strptime(fecha_entrada, "%d/%m/%Y") # Extrae el dia de la fecha de entrada
-            dia2 = datetime.strptime(fecha_salida, "%d/%m/%Y")
-            if dia2 <= dia1:
-                messagebox.showerror(title="Error", message="La fecha de salida debe ser posterior a la de entrada.")
-                return
-            dtotal = (dia2 - dia1).days  # Calcula la diferencia de dias
-            dtotal = abs(dtotal)
-            total = dtotal* self.precio
+            cantidad_personas = self.txt_cantidad_personas.get()
+            self.precio = Propiedades.buscar_precio(id_sitio)
             disponible = "No"
-            reserva = Reservas(identificacion, id_sitio, fecha_entrada, fecha_salida,disponible, cantidad_personas, total)
+            reserva = Reservas(identificacion, id_sitio, fecha_entrada, fecha_salida,disponible, cantidad_personas, self.precio)
 
-            if jsonreservaciones.editarReserva(reserva):
+            if reserva.editar_reserva(reserva):
                 messagebox.showinfo("Éxito", "Reservación eliminada correctamente.")
                 self.mostrarReservacion()
                 self.limpiarCampos()
@@ -145,5 +130,3 @@ class EditarReservacion(tk.Toplevel):
         except Exception as e:
             messagebox.showerror(message=str(e), title="Ha ocurrido un error:")
             self.destroy()
-
-

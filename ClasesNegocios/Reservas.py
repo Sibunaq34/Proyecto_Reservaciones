@@ -1,6 +1,5 @@
 from ClasesDatos.JsonReservaciones import JsonReservaciones
-from ClasesNegocios.Validadores import ValidadorReservas
-
+from ClasesNegocios.Validadores.ValidadorReservas import ValidadorReservas
 
 class Reservas:
     def __init__(self, identificacion, id_sitio, fecha_entrada, fecha_salida, disponible, cantidad_personas, total):
@@ -13,7 +12,7 @@ class Reservas:
         self.__total = total
 
     def __str__(self):
-        return "Identificacion: {}\nID Sitio: {}\nFecha Entrada: {}\nFecha Salida: {}\nDisponible: {}\nCanditidad de personas a ir: {}\nCosto total a pagar: {}".format(self.__identificacion, self.__id_sitio, self.__fecha_entrada, self.__fecha_salida, self.__disponible, self.__cantidad_personas, self.__total)
+        return "Identificacion: {}\nID del Sitio: {}\nFecha Entrada: {}\nFecha Salida: {}\nDisponible: {}\nCanditidad de personas a ir: {}\nCosto total a pagar: {}".format(self.__identificacion, self.__id_sitio, self.__fecha_entrada, self.__fecha_salida, self.__disponible, self.__cantidad_personas, self.__total)
     
 
     @property
@@ -85,22 +84,26 @@ class Reservas:
         dias = abs(dias)
         self.Total = dias * self.Total
 
-        validacion = reserva.validacion_fecha(self.Id_sitio, self.Fecha_entrada, self.Fecha_salida)
+        validacion = reserva.validacion_fecha(int(self.Id_sitio), self.Fecha_entrada, self.Fecha_salida)
         if  validacion == False:
-            reserva.registrar_reservacion(self.Identificacion, self.Id_sitio, self.Fecha_entrada, 
+            reserva.registrar_reservacion(str(self.Identificacion), int(self.Id_sitio), self.Fecha_entrada, 
                                      self.Fecha_salida, self.Disponible, self.Cantidad_Personas, self.Total)
         else :
             raise ValueError("Ya existe una reservacion en esas fechas, por favor elija otras fechas para su reservacion")
 
 
-    def eliminar_reserva(self):
-        ValidadorReservas.validar_formato_fechas(self.Fecha_entrada, self.Fecha_salida)
+    @classmethod
+    def eliminar_reserva(cls, identificacion, id_sitio):
         reserva = JsonReservaciones()
-        return reserva.eliminar_reserva(self.Identificacion,self.Id_sitio, self.Fecha_entrada, self.Fecha_salida)
+        return reserva.eliminar_reserva(str(identificacion), int(id_sitio))
 
-    def leer_reserva(self):
+
+    @classmethod
+    def leer_reserva(cls):
         reserva = JsonReservaciones()
-        return reserva.leer_reserva()
+        reserva = reserva.leer_reserva()
+        reserva = reserva["Reservaciones"]["Clientes"]
+        return reserva
 
 
     def editar_reserva(self):
@@ -109,25 +112,26 @@ class Reservas:
         fecha1= ValidadorReservas.validar_formato_fechas(self.Fecha_entrada)
         fecha2=ValidadorReservas.validar_formato_fechas(self.Fecha_salida)
         ValidadorReservas.validar_fechas(self.Fecha_entrada, self.Fecha_salida)
-        ValidadorReservas.validar_cantidad_personas(self.Cantidad_Personas)
+        ValidadorReservas.validar_cantidad_personas(int(self.Cantidad_Personas))
 
         dias = (fecha2 - fecha1).days
         dias = abs(dias)
         self.Total = dias * self.Total
-        validacion = reserva.validacion_fecha(self.Id_sitio, self.Identificacion, self.Fecha_entrada, self.Fecha_salida)
+        validacion = reserva.validacion_fecha(int(self.Id_sitio), str(self.Identificacion), self.Fecha_entrada, self.Fecha_salida)
         if validacion == False:
-            reserva.editar_reserva(self.Identificacion, self.Id_sitio, self.Fecha_entrada, 
-                                self.Fecha_salida, self.Disponible, self.Cantidad_Personas, self.Total)
+            reserva.editar_reserva(str(self.Identificacion), int(self.Id_sitio), self.Fecha_entrada, 
+                                self.Fecha_salida, int(self.Cantidad_Personas), int(self.Total))
         else:
             raise ValueError("Ya existe una reservacion en esas fechas, por favor elija otras fechas para su reservacion")
 
 
     def buscar_reserva(self):
         reserva = JsonReservaciones()
-        return reserva.buscar_reserva(self.Identificacion, self.Id_sitio, self.Fecha_entrada, self.Fecha_salida)
+        return reserva.buscar_reserva(str(self.Identificacion), int(self.Id_sitio), self.Fecha_entrada, self.Fecha_salida)
 
 
-    def validacion_fecha(self):
+
+    @classmethod
+    def validacion_fecha(cls, id_sitio, fecha_entrada, fecha_salida):
         reserva = JsonReservaciones()
-        return reserva.validacion_fecha(self.Id_sitio, self.Fecha_entrada, self.Fecha_salida)
-
+        return reserva.validacion_fecha(int(id_sitio), fecha_entrada, fecha_salida)
