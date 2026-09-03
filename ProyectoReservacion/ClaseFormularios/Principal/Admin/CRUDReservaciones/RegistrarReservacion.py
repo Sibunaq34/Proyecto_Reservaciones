@@ -2,9 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from tkinter.font import BOLD
-from datetime import datetime
-from ClasesDatos.JsonPropiedad import JsonPropiedad
-from ClasesDatos.JsonReservaciones import JsonReservaciones
+from ClasesNegocios.Propiedades import Propiedades
 from ClasesDatos.Clientes import ArchivoClientes
 from ClasesNegocios.Reservas import Reservas
 
@@ -68,7 +66,7 @@ class RegistrarReservacion(tk.Toplevel):
         self.lbl_precio_noche = tk.Label(self, text=str(self.precio),font=("Times", 12), fg="#666a88", anchor="w")
         self.lbl_precio_noche.grid(row=7,column=1, sticky="W")
 
-        self.btn_registrar = tk.Button(self, text="Realizar Reservacion", command= self.registraReservacion, bg="#666a88", fg="#fcfcfc")
+        self.btn_registrar = tk.Button(self, text="Realizar Reservacion", command= self.registra_reservacion, bg="#666a88", fg="#fcfcfc")
         self.btn_registrar.grid(row=8, columnspan=2, sticky=("W"))
 
         self.mostrarPropiedades()
@@ -82,20 +80,20 @@ class RegistrarReservacion(tk.Toplevel):
 
     def mostrarPropiedades(self):
 
-        jsonpropiedad = JsonPropiedad()
-        propiedades= jsonpropiedad.leerPropiedades()
+        propiedades = Propiedades()
+        propiedades= propiedades.leer_propiedades()
 
         for item in self.tabla.get_children():
             self.tabla.delete(item)
 
         for propiedad in propiedades:
             self.tabla.insert("",tk.END, values=(
-                propiedad.get("ID:",""),
-                propiedad.get("Tipo de Propiedad:",""),
-                propiedad.get("Ubicacion:",""),
-                propiedad.get("Cantidad maxima de personas:", ""),
-                propiedad.get("Precio por noche:",""),
-                propiedad.get("Contacto:", "")
+                propiedad.get("ID del sitio",""),
+                propiedad.get("Tipo de Propiedad",""),
+                propiedad.get("Ubicacion",""),
+                propiedad.get("Cantidad maxima de personas", ""),
+                propiedad.get("Precio por noche",""),
+                propiedad.get("Contacto", "")
             ))
 
     def seleccionarPropiedadesTabla(self, event):
@@ -106,53 +104,39 @@ class RegistrarReservacion(tk.Toplevel):
             self.txt_id_sitio.insert(0, valores[0])
             self.precio = int(valores[4])
 
-    def registraReservacion (self):
 
-        jsonrserva = JsonReservaciones()
+    def registra_reservacion(self):
+
         try:
-            cliente= ArchivoClientes()
+            cliente = ArchivoClientes()
             if self.txt_id.get() and self.txt_id_sitio.get() and self.txt_fecha_entrada.get() and self.txt_fecha_salida.get() and self.txt_cantidad_personas.get():
                 identificacion = int(self.txt_id.get())
                 usuarios = cliente.validacionCliente(identificacion)
                 if usuarios:
+                    reservacion = Reservas()
                     id_sitio = int(self.txt_id_sitio.get())
                     fecha_entrada = self.txt_fecha_entrada.get()
                     fecha_salida = self.txt_fecha_salida.get()
-                    reserva_existente = jsonrserva.validacionFecha(fecha_entrada, fecha_salida, id_sitio)
+                    reserva_existente = reservacion.validacion_fecha(id_sitio, fecha_entrada, fecha_salida)
                     if reserva_existente:
-                        messagebox.showwarning(title="Reservacion",message="Ya existe una reservacion para esas fechas en esta propiedad.")
+                        messagebox.showwarning(title="Reservacion",
+                                               message="Ya existe una reservacion para esas fechas en esta propiedad.")
                         return
                     cantidad_personas = int(self.txt_cantidad_personas.get())
-
-                    dia1 = datetime.strptime(fecha_entrada, "%d/%m/%Y") # Extrae el dia de la fecha de entrada
-                    dia2 = datetime.strptime(fecha_salida, "%d/%m/%Y")
-                    if dia2 <= dia1:
-                        messagebox.showerror(title="Error", message="La fecha de salida debe ser posterior a la de entrada.")
-                        return
-                    dtotal = (dia2 - dia1).days  # Calcula la diferencia de dias
-                    dtotal = abs(dtotal)
-                    total = dtotal* self.precio
                     disponible = "No"
-                    reservacion = Reservas(identificacion, id_sitio, fecha_entrada, fecha_salida, disponible, cantidad_personas, total)
-
-                    jsonrserva.RegistrarReservacion(reservacion)
-
+                    reservacion.registrar_reserva(identificacion, id_sitio, fecha_entrada, fecha_salida, disponible,
+                                                  cantidad_personas, self.precio)
                     self.mostrarPropiedades()
-                    self.limpiarCampos() 
+                    self.limpiarCampos()
                 else:
                     messagebox.showerror(title="Error", message="La identificacion no esta registrada como cliente")
                     return
             else:
-                messagebox.showerror("Error, los campos no pueden estar vacios")
+                messagebox.showerror(title="Error", message="Error, los campos no pueden estar vacios")
                 return
         except Exception as e:
-            messagebox.showerror(message=str(e),title="Ha ocurrido un error:")
+            messagebox.showerror(message=str(e), title="Ha ocurrido un error:")
             self.destroy()
-
-
-
-
-
 
 
 

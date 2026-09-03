@@ -1,8 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from tkinter.font import BOLD
-from datetime import datetime
 from ClasesNegocios.Propiedades import Propiedades
 from ClasesNegocios.Reservas import Reservas
 

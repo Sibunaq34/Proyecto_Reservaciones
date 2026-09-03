@@ -1,10 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from tkinter.font import BOLD
-from datetime import datetime
-from ClasesDatos.JsonReservaciones import *
-from ClasesDatos.Clientes import ArchivoClientes
 from ClasesNegocios.Reservas import Reservas
 
 
@@ -82,8 +78,8 @@ class EliminarReservacion(tk.Toplevel):
 
     def mostrarReservacion(self):
 
-        jsonreservacion = JsonReservaciones()
-        reservaciones = jsonreservacion.leerReserva()
+        reservaciones = Reservas()
+        reservaciones = reservaciones.leer_reserva()
 
         for item in self.tabla.get_children():
             self.tabla.delete(item)
@@ -116,20 +112,13 @@ class EliminarReservacion(tk.Toplevel):
 
     def eliminarReservacion(self):        
         try:
+            reservaciones = Reservas()
             identificacion = int(self.txt_id.get())
             id_sitio = int(self.txt_id_sitio.get())
             fecha_entrada = self.txt_fecha_entrada.get()
             fecha_salida = self.txt_fecha_salida.get()
-            cantidad_personas = int(self.txt_cantidad_personas.get())
 
-            jsonreservaciones = JsonReservaciones()
-            
-            total = jsonreservaciones.buscarTotal(identificacion, id_sitio, fecha_entrada, fecha_salida)
-            
-            disponible = "No"
-            reserva = Reservas(identificacion, id_sitio, fecha_entrada, fecha_salida,disponible, cantidad_personas, total)
-
-            if jsonreservaciones.eliminarReserva(reserva):
+            if reservaciones.eliminar_reserva(identificacion, id_sitio, fecha_entrada, fecha_salida):
                 messagebox.showinfo("Éxito", "Reservación eliminada correctamente.")
                 self.mostrarReservacion()
                 self.limpiarCampos()
