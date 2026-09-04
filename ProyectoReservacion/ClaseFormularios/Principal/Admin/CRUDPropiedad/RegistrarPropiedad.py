@@ -101,10 +101,11 @@ class RegistrarPropiedad(tk.Toplevel):
     def registrar_propiedad (self):
 
         try:
-            dueno= ArchivoDuenos()
+            dueno = Usuarios()
             if self.txt_id.get() and self.txt_id_sitio.get() and self.txt_tipo_propie.get() and self.txt_ubicacion.get() and self.txt_cantidad_maxima_personas.get() and self.txt_precio_noche.get() and self.txt_contacto.get():
                 identificacion = int(self.txt_id.get())
-                usuarios = dueno.validacionDueno(identificacion)
+                tipo = "Dueno"
+                usuarios = dueno.validar_usuario(tipo, identificacion)
                 if usuarios:
                     id_sitio = self.txt_id_sitio.get()
                     tipo_propie = self.txt_tipo_propie.get()

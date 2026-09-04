@@ -98,22 +98,25 @@ class EditarDuenos(tk.Toplevel):
 
     
     def editarDuenos (self):
-        if not self.txt_id.get():
-            messagebox.showerror(title="Error", message="Debe de seleccionar un Dueno")
-            return
-        
-        tipo = "Dueno"
-        dueno =  Usuarios(int(self.txt_id.get()),self.txt_nombre.get(),self.txt_apellido.get(),self.txt_email.get(),self.txt_contrasena.get(), tipo)
+        try:
+            usuario = Usuarios()
+            if not self.txt_id.get():
+                messagebox.showerror(title="Error", message="Debe de seleccionar un usuario")
+                return
 
-        xmlduenos = ArchivoDuenos()
-
-        if xmlduenos.modificarXml(dueno):
-            messagebox.showinfo(title="Listo", message="Se ha editado correctamente al dueño")
-            self.mostrarDatos()
-            self.limpiarCampos()
+            tipo = "Dueno"
+            if usuario.editar_usuario(tipo, int(self.txt_id.get()), self.txt_nombre.get(), self.txt_apellido.get(),
+                                      self.txt_email.get(), self.txt_contrasena.get()):
+                messagebox.showinfo(title="Listo", message="Se ha editado correctamente al cliente")
+                self.mostrarDatos()
+                self.limpiarCampos()
+                self.destroy()
+            else:
+                messagebox.showerror(title="Error", message="No se ha podido editar el cliente")
+        except Exception as e:
+            messagebox.showerror(message=str(e), title="Ha ocurrido un error:")
             self.destroy()
-        else:
-            messagebox.showerror(title="Error", message="No se ha podido editar el dueño")
+
 
 
 

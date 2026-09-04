@@ -100,13 +100,3 @@ class RegistrarUsuario(tk.Toplevel):
                 messagebox.showerror("Error, los campos no pueden estar vacios")
         except Exception as e:
             messagebox.showerror(message={e},title="Ha ocurrido un error:")
-
-
-
-
-
-
-
-
-
-

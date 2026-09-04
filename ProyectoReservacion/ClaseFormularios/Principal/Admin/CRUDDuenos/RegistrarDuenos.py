@@ -83,31 +83,24 @@ class RegistrarDueno(tk.Toplevel):
     
     def registrarDuenos (self):
 
-        xmlduenos = ArchivoDuenos()
         try:
             if self.txt_id.get() and self.txt_nombre.get() and self.txt_apellido.get() and self.txt_email.get() and self.txt_contrasena.get():
+                cliente = Usuarios()
                 identificacion = int(self.txt_id.get())
                 nombre = self.txt_nombre.get()
                 apellido = self.txt_apellido.get()
                 email = self.txt_email.get()
                 contrasena = self.txt_contrasena.get()
                 tipo = "Dueno"
-                
-                dueno= xmlduenos.validacionDueno(identificacion, email)
-                if dueno:
-                    messagebox.showerror(title="Error", message="La identidifacion y correo electronico ya fueron registrados")
-                    return
-                duenos = Usuarios(identificacion, nombre, apellido, email, contrasena, tipo)
-
-                xmlduenos.escribirXml(duenos)
+                cliente.registrar_usuario(tipo, identificacion, nombre, apellido, email, contrasena)
                 self.mostrarDatos()
                 self.limpiarCampos()
-                messagebox.showinfo(title="Listo", message="Se ha registrado correctamente al Dueños")
+                messagebox.showinfo(title="Listo", message="Se ha registrado correctamente al Cliente")
+                self.destroy()
             else:
                 messagebox.showerror("Error, los campos no pueden estar vacios")
         except Exception as e:
             messagebox.showerror(message={e},title="Ha ocurrido un error:")
-
 
 
 

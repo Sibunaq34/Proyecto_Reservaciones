@@ -99,27 +99,23 @@ class EliminarDueno(tk.Toplevel):
 
     
     def eliminarDueno (self):
-        if not self.txt_id.get():
-            messagebox.showerror(title="Error", message="Debe de seleccioonar un dueño para eliminar")
+        try:
+            usuarios = Usuarios()
 
-        tipo = "Dueno"
+            if not self.txt_id.get():
+                messagebox.showerror(title="Error", message="Debe de seleccionar un cliente para eliminar")
+            tipo = "Dueno"
+            if usuarios.eliminar_usuario(tipo, int(self.txt_id.get())):
+                messagebox.showinfo(title="Hecho", message="Se ha eliminado correctamente al cliente")
+                self.mostrarDatos()
+                self.limpiarCampos()
+                self.destroy()
 
-        dueno =  Usuarios(int(self.txt_id.get()),self.txt_nombre.get(),self.txt_apellido.get(),self.txt_email.get(),self.txt_contrasena.get(), tipo)
-
-
-
-        duenos = ArchivoDuenos()
-
-        if duenos.eliminarDueno(dueno):
-            messagebox.showinfo(title="Hecho", message="Se ha eliminado correctamente al dueño")
-            self.mostrarDatos()
-            self.limpiarCampos()
+            else:
+                messagebox.showerror(title="Error", message="No se ha podido eliminar al cliente")
+        except Exception as e:
+            messagebox.showerror(message=str(e), title="Ha ocurrido un error:")
             self.destroy()
-
-        else: 
-            messagebox.showerror(title= "Error", message="No se ha podido eliminar al dueño")
-
-
 
 
 

@@ -108,10 +108,11 @@ class RegistrarReservacion(tk.Toplevel):
     def registra_reservacion(self):
 
         try:
-            cliente = ArchivoClientes()
+            cliente = Usuarios()
             if self.txt_id.get() and self.txt_id_sitio.get() and self.txt_fecha_entrada.get() and self.txt_fecha_salida.get() and self.txt_cantidad_personas.get():
                 identificacion = int(self.txt_id.get())
-                usuarios = cliente.validacionCliente(identificacion)
+                tipo = "Cliente"
+                usuarios = cliente.validar_usuario(tipo, identificacion)
                 if usuarios:
                     reservacion = Reservas()
                     id_sitio = int(self.txt_id_sitio.get())
