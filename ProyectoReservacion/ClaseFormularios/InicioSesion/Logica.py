@@ -1,8 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from tkinter.font import BOLD
-from ClasesDatos.Dueno import ArchivoDuenos
-from ClasesDatos.Clientes import ArchivoClientes
+from ClasesNegocios.Usuarios import Usuarios
 from ClasesDatos.UsuarioAdmin import UsuarioAdmin
 from ClaseFormularios.InicioSesion.DisenoIniciarSesion import FormularioInicioSesion
 from ClaseFormularios.InicioSesion.DisenoRegistrar import FormularioRegistrar
@@ -17,8 +15,7 @@ class InicioSesion(FormularioInicioSesion):
 
     def validacion(self):
         admin = UsuarioAdmin()
-        cliente = ArchivoClientes()
-        duenos = ArchivoDuenos()
+        usuarios = Usuarios()
         email = self.usuario.get()
         password = self.contrasena.get()
 
@@ -29,14 +26,14 @@ class InicioSesion(FormularioInicioSesion):
             PaginaPrincipal()
             return
 
-        usuario = cliente.inicioSesion(email, password) 
+        usuario = usuarios.iniciar_sesion("Cliente",email, password)
 
         if usuario:
             self.ventana.destroy()
             PaginaPrincipalC(email, password) ## Envia la contrasena e email que se ingresaron a la hora de iniciar sesion
             return
 
-        usuario = duenos.inicioSesion(email, password)
+        usuario = usuarios.iniciar_sesion("Dueno",email, password)
         if usuario:
             self.ventana.destroy()
             PaginaPrincipalDuenos(email, password)

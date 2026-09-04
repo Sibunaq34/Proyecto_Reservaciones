@@ -4,7 +4,7 @@ from tkinter import messagebox
 from tkinter.font import BOLD
 from ClasesNegocios.Propiedades import Propiedades
 from ClasesNegocios.Reservas import Reservas
-from ClasesDatos.Clientes import ArchivoClientes
+from ClasesNegocios.Usuarios import Usuarios
 
 
 class RegistrarReservacion(tk.Toplevel): 

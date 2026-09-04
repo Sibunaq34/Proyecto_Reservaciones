@@ -1,8 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from tkinter.font import BOLD
-from ClasesDatos.Clientes import ArchivoClientes
 from ClasesNegocios.Usuarios import Usuarios
 
 class RegistrarUsuario(tk.Toplevel): 
@@ -70,9 +68,8 @@ class RegistrarUsuario(tk.Toplevel):
 
     def mostrarDatos(self):
 
-        xmlusuarios= ArchivoClientes()
-        usuarios= xmlusuarios.leerXml()
-        
+        usuarios = Usuarios()
+        usuarios= usuarios.leer_cliente()
         for usuario in usuarios:
             self.tabla.insert("",tk.END, values=(
                 usuario.get("Identificacion", ""),
@@ -85,26 +82,20 @@ class RegistrarUsuario(tk.Toplevel):
     
     def registrarUsuario (self):
 
-        xmlusuarios = ArchivoClientes()
         try:
             if self.txt_id.get() and self.txt_nombre.get() and self.txt_apellido.get() and self.txt_email.get() and self.txt_contrasena.get():
+                cliente = Usuarios()
                 identificacion = int(self.txt_id.get())
                 nombre = self.txt_nombre.get()
                 apellido = self.txt_apellido.get()
                 email = self.txt_email.get()
                 contrasena = self.txt_contrasena.get()
                 tipo = "Cliente"
-                
-                cliente = xmlusuarios.validarRegisrtro(identificacion,email)
-                if cliente:
-                    messagebox.showerror(title="Error", message="Ya existe un cliente con la identificacion o con el email")
-                    return
-                clientes = Usuarios(identificacion, nombre, apellido, email, contrasena, tipo)
-
-                xmlusuarios.escribirXml(clientes)
+                cliente.registrar_usuario(tipo, identificacion, nombre, apellido, email, contrasena)
                 self.mostrarDatos()
                 self.limpiarCampos()
                 messagebox.showinfo(title="Listo", message="Se ha registrado correctamente al Cliente")
+                self.destroy()
             else:
                 messagebox.showerror("Error, los campos no pueden estar vacios")
         except Exception as e:

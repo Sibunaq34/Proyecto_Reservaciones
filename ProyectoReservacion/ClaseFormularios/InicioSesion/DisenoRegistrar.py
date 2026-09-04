@@ -2,8 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter.font import BOLD
 from tkinter import messagebox
-from ClasesDatos.Clientes import *
-from ClasesDatos.Dueno  import *
 from ClasesNegocios.Usuarios import Usuarios
 
 class FormularioRegistrar: 
@@ -79,11 +77,10 @@ class FormularioRegistrar:
         self.ventana.mainloop()
 
     def registrar(self):
-        xmlclientes = ArchivoClientes()
-        xmlduenos = ArchivoDuenos()
         try:
             
             if self.txt_identificacion.get() and self.txt_nombre.get() and self.txt_apellidos.get() and self.txt_email.get() and self.txt_contrasena.get():
+                usuarios = Usuarios()
                 identificacion = int(self.txt_identificacion.get())
                 nombre = self.txt_nombre.get()
                 apellido = self.txt_apellidos.get()
@@ -91,27 +88,9 @@ class FormularioRegistrar:
                 contrasena = self.txt_contrasena.get()
                 tipo = self.cbx_tipo.get()
 
-                if tipo == "Cliente":
-                    cliente = xmlclientes.validarRegisrtro(identificacion,email)
-                    if cliente:
-                        messagebox.showerror(title="Error", message="Ya existe una con la identificacion o con el email")
-                        return
-                    clientes = Usuarios(identificacion, nombre, apellido, email, contrasena, tipo)
-
-                    xmlclientes.escribirXml(clientes)
-                    messagebox.showinfo(title="Listo", message="Se ha registrado correctamente al Cliente")
-                    self.ventana.destroy()
-                else:
-                    dueno= xmlduenos.validacionRegistro(identificacion, email)
-                    if dueno:
-                        messagebox.showerror(title="Error", message="La identidifacion y correo electronico ya fueron registrados")
-                        return
-                    duenos = Usuarios(identificacion, nombre, apellido, email, contrasena, tipo)
-
-                    xmlduenos.escribirXml(duenos)
+                if usuarios.registrar_usuario(tipo,identificacion,nombre,apellido,email,contrasena):
                     messagebox.showinfo(title="Listo", message="Se ha registrado correctamente al Dueños")
                     self.ventana.destroy()
-
             else:
                 messagebox.showerror("Error, los campos no pueden estar vacios")
         except Exception as e:

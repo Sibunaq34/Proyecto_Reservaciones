@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 class ValidadorReservas:
 
@@ -7,7 +7,7 @@ class ValidadorReservas:
     def validar_formato_fechas(fecha):
 
         try:
-            fecha = datetime.datetime.strptime(fecha, "%d/%m/%Y")
+            fecha = datetime.strptime(fecha, "%d/%m/%Y")
             return fecha
         except ValueError:
             raise ValueError("Formato de fecha inválido. Use el formato DD/MM/AAAA.")
@@ -15,8 +15,10 @@ class ValidadorReservas:
 
     @staticmethod
     def validar_fechas(fecha_entrada, fecha_salida):
-         if fecha_salida <= fecha_entrada:
-             raise ValueError("La fecha de salida debe ser posterior a la de entrada.")
+        fecha_entrada = datetime.strptime(fecha_entrada, "%d/%m/%Y")
+        fecha_salida = datetime.strptime(fecha_salida, "%d/%m/%Y")
+        if fecha_entrada >= fecha_salida:
+            raise ValueError("La fecha de salida debe ser posterior a la de entrada.")
 
 
     @staticmethod

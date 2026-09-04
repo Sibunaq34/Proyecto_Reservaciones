@@ -1,8 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from tkinter.font import BOLD
-from ClasesDatos.Dueno import ArchivoDuenos
 from ClasesNegocios.Usuarios import Usuarios
 
 class EliminarDueno(tk.Toplevel): 

@@ -1,8 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from tkinter.font import BOLD
-from ClasesDatos.Clientes import ArchivoClientes
 from ClasesNegocios.Usuarios import Usuarios
 
 class EliminarCliente(tk.Toplevel): 
@@ -72,8 +70,8 @@ class EliminarCliente(tk.Toplevel):
 
     def mostrarDatos(self):
 
-        xmlusuarios= ArchivoClientes()
-        usuarios= xmlusuarios.leerXml()
+        usuarios= Usuarios()
+        usuarios = usuarios.leer_cliente()
         
         for usuario in usuarios:
             self.tabla.insert("",tk.END, values=(
@@ -102,28 +100,24 @@ class EliminarCliente(tk.Toplevel):
 
 
     def eliminarUsuario (self):
-        if not self.txt_id.get():
-            messagebox.showerror(title="Error", message="Debe de seleccioonar un cliente para eliminar")
 
-        
-        tipo = "Cliente"
+        try:
+            usuarios = Usuarios()
 
-        usuario =  Usuarios(int(self.txt_id.get()),self.txt_nombre.get(),self.txt_apellido.get(),self.txt_email.get(),self.txt_contrasena.get(), tipo)
+            if not self.txt_id.get():
+                messagebox.showerror(title="Error", message="Debe de seleccionar un cliente para eliminar")
+            tipo = "Cliente"
+            if usuarios.eliminar_usuario(tipo, int(self.txt_id.get())):
+                messagebox.showinfo(title="Hecho", message="Se ha eliminado correctamente al cliente")
+                self.mostrarDatos()
+                self.limpiarCampos()
+                self.destroy()
 
-        
-
-
-        cliente = ArchivoClientes()
-
-        if cliente.eliminarCliente(usuario):
-            messagebox.showinfo(title="Hecho", message="Se ha eliminado correctamente al cliente")
-            self.mostrarDatos()
-            self.limpiarCampos()
-            self.destroy()
-
-        else: 
-            messagebox.showerror(title= "Error", message="No se ha podido eliminar al cliente")
-
+            else:
+                messagebox.showerror(title= "Error", message="No se ha podido eliminar al cliente")
+        except Exception as e:
+                messagebox.showerror(message=str(e), title="Ha ocurrido un error:")
+                self.destroy()
 
 
 

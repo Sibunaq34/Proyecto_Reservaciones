@@ -3,7 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from tkinter.font import BOLD
 from ClasesNegocios.Propiedades import Propiedades
-from ClasesDatos.Clientes import ArchivoClientes
+from ClasesNegocios.Usuarios import Usuarios
 from ClasesNegocios.Reservas import Reservas
 
 

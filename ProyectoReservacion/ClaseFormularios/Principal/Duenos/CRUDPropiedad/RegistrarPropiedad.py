@@ -1,9 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from tkinter.font import BOLD
-from ClasesDatos.JsonPropiedad import JsonPropiedad
-from ClasesDatos.Dueno import ArchivoDuenos
 from ClasesNegocios.Propiedades import Propiedades
 
 

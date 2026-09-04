@@ -21,8 +21,13 @@ class JsonReservaciones:
         datos = self.leer_reserva()
 
         lista_reservaciones = datos["Reservaciones"]["Clientes"]
+        if lista_reservaciones:
+            id_reservacion = max(cliente["ID de la Reservacion"] for cliente in lista_reservaciones)+1
+        else:
+            id_reservacion = 1
 
         nueva_reservacion = {
+            "ID de la Reservacion": int(id_reservacion),
             "Identificacion": str(identificacion),  
             "ID Sitio": id_sitio,
             "Fecha de entrada": fecha_entrada,
@@ -44,14 +49,14 @@ class JsonReservaciones:
         with open(self.archivo, "r", encoding="utf-8") as f: return json.load(f)
 
 
-    def editar_reserva(self, identificacion, id_sitio, fecha_entrada, 
+    def editar_reserva(self, id_reservacion, fecha_entrada,
                        fecha_salida, disponible, cantidad_personas, total):
 
         datos = self.leer_reserva()
         lista_reservaciones = datos["Reservaciones"]["Clientes"]
 
         for reservacion in lista_reservaciones:
-            if reservacion["Identificacion"] == str(identificacion) and reservacion["ID Sitio"] == id_sitio and reservacion["Fecha de entrada"] == fecha_entrada and reservacion["Fecha de salida"] == fecha_salida:
+            if reservacion["ID de la Reservacion"]  == id_reservacion:
                 reservacion["Fecha de entrada"] = fecha_entrada
                 reservacion["Fecha de salida"] = fecha_salida
                 reservacion["Disponibilidad"] = disponible
@@ -61,17 +66,16 @@ class JsonReservaciones:
                 with open(self.archivo, "w", encoding="utf-8") as f:
                     json.dump(datos, f, indent=4)
                 return reservacion
-
-        raise ValueError("No se encontró la reservación con los criterios especificados.")
+        return None
 
     
-    def eliminar_reserva(self, identificacion , id_sitio, fecha_entrada, fecha_salida):
+    def eliminar_reserva(self,id_reserva):
 
         datos = self.leer_reserva()
         lista_reservaciones = datos["Reservaciones"]["Clientes"]
 
         for i, reservacion in enumerate(lista_reservaciones):
-            if reservacion["Identificacion"] == str(identificacion) and reservacion["ID Sitio"] == id_sitio and reservacion["Fecha de entrada"] == fecha_entrada and reservacion["Fecha de salida"] == fecha_salida:
+            if reservacion["ID de la Reservacion"] == id_reserva:
                 lista_reservaciones.pop(i)
                 with open(self.archivo, "w", encoding="utf-8") as f:
                     json.dump(datos, f, indent=4)
@@ -88,14 +92,14 @@ class JsonReservaciones:
         for reservacion in lista_reservaciones:
             es_reserva_actual = (
                 identificacion is not None and
-                reservacion["Identificacion"] == str(identificacion) and
-                str(reservacion["ID Sitio"]) == str(id_sitio) and
+                reservacion["Identificacion"] == identificacion and
+                str(reservacion["ID Sitio"]) ==id_sitio and
                 reservacion["Fecha de entrada"] == fecha_entrada and
                 reservacion["Fecha de salida"] == fecha_salida
             )
             if es_reserva_actual:
                 continue
-            if (str(reservacion["ID Sitio"]) == str(id_sitio) and
+            if (str(reservacion["ID Sitio"]) == id_sitio and
                 fecha_entrada <= reservacion["Fecha de salida"] and
                 fecha_salida >= reservacion["Fecha de entrada"]):
                 return True

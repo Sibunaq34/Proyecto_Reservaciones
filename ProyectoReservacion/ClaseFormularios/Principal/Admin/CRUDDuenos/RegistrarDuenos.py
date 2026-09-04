@@ -1,8 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from tkinter.font import BOLD
-from ClasesDatos.Dueno import ArchivoDuenos
 from ClasesNegocios.Usuarios import Usuarios
 
 class RegistrarDueno(tk.Toplevel): 
@@ -67,10 +65,11 @@ class RegistrarDueno(tk.Toplevel):
         self.txt_email.delete(0, tk.END)
         self.txt_contrasena.delete(0, tk.END)
 
+
     def mostrarDatos(self):
 
-        xmlduenos= ArchivoDuenos()
-        duenos= xmlduenos.leerXml()
+        duenos= Usuarios()
+        duenos = duenos.leer_duenos()
         
         for dueno in duenos:
             self.tabla.insert("",tk.END, values=(
