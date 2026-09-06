@@ -1,10 +1,12 @@
 from ClasesNegocios.Validadores.ValidarUsuarios import ValidarUsuario
 from ClasesDatos.Usuarios import ArchivosUsuarios
+from ClasesDatos.UsuarioAdmin import UsuarioAdmin
 
 class Usuarios:
  # Metodo constructor
     def __init__(self):
         self.xml_clientes = ArchivosUsuarios()
+        self.text_admin = UsuarioAdmin()
 
 
     def registrar_usuario(self, tipo, identificacion, nombre, apellido, email, contrasena):
@@ -15,6 +17,10 @@ class Usuarios:
         usuario= ValidarUsuario()
         usuario.validar_registro(tipo, identificacion, email)
         return self.xml_clientes.escribir_xml(tipo, identificacion, nombre, apellido, email, contrasena)
+
+
+    def leer_usuarios(self):
+        return  self.xml_clientes.leer_xml()
 
 
     def leer_cliente(self):
@@ -38,8 +44,11 @@ class Usuarios:
 
 
     def iniciar_sesion(self,tipo, email, contrasena):
-        return self.xml_clientes.inicio_sesion(tipo, email, contrasena)
+        if tipo == "Admin":
+            return self.text_admin.buscar_usuario(email, contrasena)
+        else:
+            return self.xml_clientes.inicio_sesion(tipo, email, contrasena)
 
 
-    def validar_usuario(self, tipo, identificacion):
-        return self.xml_clientes.validacion_usuario(tipo, identificacion)
+    def buscar_usuario(self, tipo, email):
+        return self.xml_clientes.buscar_usuario(tipo, email)

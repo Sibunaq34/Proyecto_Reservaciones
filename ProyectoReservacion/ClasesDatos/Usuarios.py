@@ -64,6 +64,7 @@ class ArchivosUsuarios:
 
         return usuarios
 
+
     def leer_clientes(self):
         usuarios = []
 
@@ -79,7 +80,7 @@ class ArchivosUsuarios:
                     "Email": nodos.findtext("Email", ""),
                     "Contrasena": nodos.findtext("Contrasena", ""),
                 })
-        
+
         return usuarios
 
 
@@ -148,14 +149,14 @@ class ArchivosUsuarios:
 
 
     def inicio_sesion(self,tipo, email, contrasena):
-        clientes = self.leer_clientes()
-        duenos = self.leer_duenos()
 
         if tipo == "Cliente":
+            clientes = self.leer_clientes()
             for cliente in clientes:
                 if cliente["Email"] == email and cliente["Contrasena"] == contrasena:
                     return cliente
-        elif tipo == "Dueno":
+        if tipo == "Dueno":
+            duenos = self.leer_duenos()
             for dueno in duenos:
                 if dueno["Email"] == email and dueno["Contrasena"] == contrasena:
                     return dueno
@@ -177,18 +178,18 @@ class ArchivosUsuarios:
         return None
     
 
-    def validacion_usuario(self,tipo, identificacion):
+    def buscar_usuario(self,tipo, email):
         clientes = self.leer_clientes()
         duenos = self.leer_duenos()
 
         if tipo == "Cliente":
             for cliente in clientes:
-                if cliente["Identificacion"]== str(identificacion):
-                    return cliente
+                if cliente["Email"]== email:
+                    return cliente["Identificacion"]
         elif tipo == "Dueno":
             for dueno in duenos:
-                if dueno["Identificacion"] == str(identificacion):
-                    return duenos
+                if dueno["Email"] == email:
+                    return dueno["Identificacion"]
         
         return None
 

@@ -3,13 +3,12 @@ from tkinter import ttk
 from tkinter import messagebox
 from ClasesNegocios.Usuarios import Usuarios
 
-class EditarCliente(tk.Toplevel): 
+class RegistrarUsuario(tk.Toplevel): 
 
-    def __init__(self, master=None, email = None, contrasena = None):
+    def __init__(self, master=None):
         super().__init__(master)
-        self.email= email
-        self.contrasena = contrasena
-        self.title("Editar Usuario")
+        self.title("Registrar Usuario")
+        self.seleccion = tk.StringVar()
         w, h = self.winfo_screenwidth(), self.winfo_screenheight()
         self.geometry("%dx%d+0+0" % (w,h))
         self.config(bg="#fcfcfc")
@@ -30,7 +29,6 @@ class EditarCliente(tk.Toplevel):
         self.tabla.heading("col5", text= "CONTRASENA")
         self.tabla.heading("col6", text="TIPO_DE_USUARIO")
         self.tabla["show"] = "headings"
-        self.tabla.bind("<ButtonRelease-1>", self.seleccionarUsuarioTabla)
 
         lblid = tk.Label(self, text="ID:",font=("Times", 14), fg="#666a88", anchor="w")
         lblid.grid(row=2,column=0, sticky="W")
@@ -56,25 +54,30 @@ class EditarCliente(tk.Toplevel):
         lbl_contrasena.grid(row=6,column=0, sticky="W")
         self.txt_contrasena = tk.Entry(self)
         self.txt_contrasena.grid(row=6,column=1, sticky="W")
-        
-        self.btn_editar = tk.Button(self, text="Editar Usuario", command= self.editarUsuario, bg="#666a88", fg="#fcfcfc")
-        self.btn_editar.grid(row=8, columnspan=2, sticky=("W"))
-        self.mostrarDatos()
 
-    def limpiarCampos(self):
+        lbl_tipo = tk.Label(self, text="Tipo de usuario:",font=("Times", 12), fg="#666a88", anchor="w")
+        lbl_tipo.grid(row=7,column=0, sticky="W")
+
+        self.cbx_tipo = ttk.Combobox(self, textvariable=self.seleccion)
+        self.cbx_tipo['values'] = ["Cliente", "Dueno"]
+        self.cbx_tipo.grid(row=7,column=1, sticky="W")
+        
+        self.btn_registrar = tk.Button(self, text="Registrar usuario", command= self.registrar_usuario, bg="#666a88", fg="#fcfcfc")
+        self.btn_registrar.grid(row=8, columnspan=2, sticky="W")
+        self.mostrar_datos()
+
+    def limpiar_campos(self):
         self.txt_id.delete(0, tk.END)
         self.txt_nombre.delete(0, tk.END)
         self.txt_apellido.delete(0, tk.END)
         self.txt_email.delete(0, tk.END)
         self.txt_contrasena.delete(0, tk.END)
 
+    def mostrar_datos(self):
 
-    def mostrarDatos(self):
-
-        xmlusuarios= ArchivoClientes()
-        usuario = xmlusuarios.leerCliente(self.email, self.contrasena) #Envia esto para comprobar que es el mismo usuario y que no muestre otros datos
-
-        if usuario:  #Comprueba que el email y contrasena esten con datos 
+        usuarios = Usuarios()
+        usuarios= usuarios.leer_usuarios()
+        for usuario in usuarios:
             self.tabla.insert("",tk.END, values=(
                 usuario.get("Identificacion", ""),
                 usuario.get("Nombre",""),
@@ -84,47 +87,23 @@ class EditarCliente(tk.Toplevel):
                 usuario.get("Tipo", "")
             ))
     
-    def seleccionarUsuarioTabla(self, event):
-        item = self.tabla.focus()
-        if item:
-            valores = self.tabla.item(item, "values")
-            self.txt_id.delete(0, tk.END)
-            self.txt_id.insert(0, valores[0])
-            self.txt_nombre.delete(0, tk.END)
-            self.txt_nombre.insert(0, valores[1])
-            self.txt_apellido.delete(0, tk.END)
-            self.txt_apellido.insert(0, valores[2])
-            self.txt_email.delete(0, tk.END)
-            self.txt_email.insert(0, valores[3])
-            self.txt_contrasena.delete(0, tk.END)
-            self.txt_contrasena.insert(0, valores[4])
+    def registrar_usuario (self):
 
-
-    
-    def editarUsuario (self):
-        if not self.txt_id.get():
-            messagebox.showerror(title="Error", message="Debe de seleccionar un usuario")
-            return
-        
-        tipo = "Cliente"
-        usuario =  Usuarios(int(self.txt_id.get()),self.txt_nombre.get(),self.txt_apellido.get(),self.txt_email.get(),self.txt_contrasena.get(), tipo)
-
-        xmlclientes = ArchivoClientes()
-
-        if xmlclientes.modificarXml(usuario):
-            messagebox.showinfo(title="Listo", message="Se ha editado correctamente al cliente")
-            self.mostrarDatos()
-            self.limpiarCampos()
-            self.destroy()
-        else:
-            messagebox.showerror(title="Error", message="No se ha podido editar el cliente")
-
-
-
-
-
-
-
-
-
-
+        try:
+            if self.txt_id.get() and self.txt_nombre.get() and self.txt_apellido.get() and self.txt_email.get() and self.txt_contrasena.get():
+                cliente = Usuarios()
+                identificacion = int(self.txt_id.get())
+                nombre = self.txt_nombre.get()
+                apellido = self.txt_apellido.get()
+                email = self.txt_email.get()
+                contrasena = self.txt_contrasena.get()
+                tipo = self.cbx_tipo.get()
+                cliente.registrar_usuario(tipo, identificacion, nombre, apellido, email, contrasena)
+                self.mostrar_datos()
+                self.limpiar_campos()
+                messagebox.showinfo(title="Listo", message="Se ha registrado correctamente al Cliente")
+                self.destroy()
+            else:
+                messagebox.showerror("Error, los campos no pueden estar vacios")
+        except Exception as e:
+            messagebox.showerror(message=str(e),title="Ha ocurrido un error:")

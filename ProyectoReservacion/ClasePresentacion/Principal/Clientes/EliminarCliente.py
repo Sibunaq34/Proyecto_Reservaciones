@@ -5,10 +5,10 @@ from ClasesNegocios.Usuarios import Usuarios
 
 class EliminarCliente(tk.Toplevel): 
 
-    def __init__(self, master=None, email=None, contrasena=None ):
+    def __init__(self, master=None, tipo = None, identificacion = None):
         super().__init__(master)
-        self.email= email
-        self.contrasena = contrasena
+        self.tipo = tipo
+        self.identificacion = identificacion
         self.title("Eliminar Cliente")
         w, h = self.winfo_screenwidth(), self.winfo_screenheight()
         self.geometry("%dx%d+0+0" % (w,h))
@@ -30,7 +30,7 @@ class EliminarCliente(tk.Toplevel):
         self.tabla.heading("col5", text= "CONTRASENA")
         self.tabla.heading("col6", text="TIPO_DE_USUARIO")
         self.tabla["show"] = "headings"
-        self.tabla.bind("<ButtonRelease-1>", self.seleccionarUsuarioTabla)
+        self.tabla.bind("<ButtonRelease-1>", self.seleccionar_usuario)
 
         lblid = tk.Label(self, text="ID:",font=("Times", 14), fg="#666a88", anchor="w")
         lblid.grid(row=2,column=0, sticky="W")
@@ -57,30 +57,30 @@ class EliminarCliente(tk.Toplevel):
         self.txt_contrasena = tk.Entry(self)
         self.txt_contrasena.grid(row=6,column=1, sticky="W")
 
-        lbl_tipo = tk.Label(self, text="Tipo de usuario:",font=("Times", 12), fg="#666a88", anchor="w")
-        lbl_tipo.grid(row=7,column=0, sticky="W")
-        self.txt_tipo = tk.Entry(self)
-        self.txt_tipo.grid(row=7,column=1, sticky="W")
-        
-        self.btn_eliminar = tk.Button(self, text="Eliminar Cliente", command= self.eliminarUsuario, bg="#666a88", fg="#fcfcfc")
-        self.btn_eliminar.grid(row=8, columnspan=2, sticky=("W"))
-        self.mostrarDatos()
+
+        self.btn_eliminar = tk.Button(self, text="Eliminar Cliente", command= self.eliminar_usuario, bg="#666a88", fg="#fcfcfc")
+        self.btn_eliminar.grid(row=8, columnspan=2, sticky="W")
+        self.mostrar_datos()
 
     
-    def limpiarCampos(self):
+    def limpiar_campos(self):
         self.txt_id.delete(0, tk.END)
         self.txt_nombre.delete(0, tk.END)
         self.txt_apellido.delete(0, tk.END)
         self.txt_email.delete(0, tk.END)
         self.txt_contrasena.delete(0, tk.END)
-        self.txt_tipo.delete(0, tk.END)
 
-    def mostrarDatos(self):
+    def mostrar_datos(self):
+
+        usuarios= Usuarios()
+        if self.tipo == "Admin":
+            usuarios= usuarios.leer_usuarios()
+        elif self.tipo == "Cliente":
+            usuarios = usuarios.leer_cliente(self.identificacion)
+        elif self.tipo == "Dueno":
+            usuarios = usuarios.leer_duenos()
         
-        xmlusuarios= ArchivoClientes()
-        usuario = xmlusuarios.leerCliente(self.email, self.contrasena) #Envia esto para comprobar que es el mismo usuario y que no muestre otros datos
-
-        if usuario:  #Comprueba que el email y contrasena esten con datos 
+        for usuario in usuarios:
             self.tabla.insert("",tk.END, values=(
                 usuario.get("Identificacion", ""),
                 usuario.get("Nombre",""),
@@ -90,7 +90,7 @@ class EliminarCliente(tk.Toplevel):
                 usuario.get("Tipo", "")
             ))
     
-    def seleccionarUsuarioTabla(self, event):
+    def seleccionar_usuario(self, event):
         item = self.tabla.focus()
         if item:
             valores = self.tabla.item(item, "values")
@@ -104,29 +104,27 @@ class EliminarCliente(tk.Toplevel):
             self.txt_email.insert(0, valores[3])
             self.txt_contrasena.delete(0, tk.END)
             self.txt_contrasena.insert(0, valores[4])
-            self.txt_tipo.delete(0, tk.END)
-            self.txt_tipo.insert(0, valores[5])
-
-    
-    def eliminarUsuario (self):
-        if not self.txt_id.get():
-            messagebox.showerror(title="Error", message="Debe de seleccioonar un cliente para eliminar")
-
-        usuario =  Usuarios(int(self.txt_id.get()),self.txt_nombre.get(),self.txt_apellido.get(),self.txt_email.get(),self.txt_contrasena.get(),self.txt_tipo.get())
 
 
+    def eliminar_usuario (self):
 
-        cliente = ArchivoClientes()
+        try:
+            usuarios = Usuarios()
 
-        if cliente.eliminarCliente(usuario):
-            messagebox.showinfo(title="Hecho", message="Se ha eliminado correctamente al cliente")
-            self.mostrarDatos()
-            self.limpiarCampos()
-            self.destroy()
+            if not self.txt_id.get():
+                messagebox.showerror(title="Error", message="Debe de seleccionar un cliente para eliminar")
+            tipo = "Cliente"
+            if usuarios.eliminar_usuario(tipo, int(self.txt_id.get())):
+                messagebox.showinfo(title="Hecho", message="Se ha eliminado correctamente al cliente")
+                self.mostrar_datos()
+                self.limpiar_campos()
+                self.destroy()
 
-        else: 
-            messagebox.showerror(title= "Error", message="No se ha podido eliminar al cliente")
-
+            else:
+                messagebox.showerror(title= "Error", message="No se ha podido eliminar al cliente")
+        except Exception as e:
+                messagebox.showerror(message=str(e), title="Ha ocurrido un error:")
+                self.destroy()
 
 
 
