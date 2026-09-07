@@ -31,6 +31,10 @@ class Usuarios:
         return self.xml_clientes.leer_duenos()
 
 
+    def filtrar_usuarios(self, tipo, identificacion):
+        return self.xml_clientes.filtrar_usuarios(tipo, identificacion)
+
+
     def editar_usuario(self, tipo, identificacion, nombre, apellido, email, contrasena):
         ValidarUsuario.validar_identificacion(identificacion)
         ValidarUsuario.nombre_usuario(nombre, apellido)

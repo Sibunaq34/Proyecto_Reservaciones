@@ -1,10 +1,7 @@
-from ClasePresentacion.Principal.CRUDDuenos.EditarDuenos import *
-from ClasePresentacion.Principal.CRUDDuenos.EliminarDuenos import *
-from ClasePresentacion.Principal.CRUDDuenos.RegistrarDuenos import *
 
-from ClasePresentacion.Principal.Clientes.EditarCliente import *
-from ClasePresentacion.Principal.Clientes.EliminarCliente import *
-from ClasePresentacion.Principal.Clientes.RegistrarCliente import *
+from ClasePresentacion.Principal.Usuario.EditarUsuario import *
+from ClasePresentacion.Principal.Usuario.EliminarUsuario import *
+from ClasePresentacion.Principal.Usuario.RegistrarUsuario import *
 
 from ClasePresentacion.Principal.Propiedad.RegistrarPropiedad import *
 from ClasePresentacion.Principal.Propiedad.EditarPropiedad import *
@@ -30,42 +27,37 @@ class PaginaPrincipal:
         label = tk.Label(self.ventana)
         label.place(x=0, y=0, relwidth=1, relheight=1)
         
-        MSmenu= tk.Menu(self.ventana)
-        self.ventana.config(menu=MSmenu)
+        ms_menu= tk.Menu(self.ventana)
+        self.ventana.config(menu=ms_menu)
 
         #region Menu Strip
-        menu_usuarios = tk.Menu(MSmenu, tearoff=0) #Crea la bandeja del menu
-        menu_propiedades = tk.Menu(MSmenu, tearoff=0) 
-        menu_reservaciones = tk.Menu(MSmenu, tearoff=0) 
-        MSmenu.add_cascade(label="Usuario", menu=menu_usuarios)  #Agrega las opciones principales esto con el add cascade
+        menu_usuarios = tk.Menu(ms_menu, tearoff=0) #Crea la bandeja del menu
+        menu_propiedades = tk.Menu(ms_menu, tearoff=0)
+        menu_reservaciones = tk.Menu(ms_menu, tearoff=0)
+        ms_menu.add_cascade(label="Usuario", menu=menu_usuarios)  #Agrega las opciones principales esto con el add cascade
         if self.tipo=="Dueno" or self.tipo == "Admin":
-            MSmenu.add_cascade(label="Propiedades", menu=menu_propiedades)
+            ms_menu.add_cascade(label="Propiedades", menu=menu_propiedades)
         if self.tipo=="Cliente" or self.tipo== "Admin":
-            MSmenu.add_cascade(label="Reservaciones", menu=menu_reservaciones)
-        MSmenu.add_cascade(label="Acerca de", command=self.acerca_de)
-        MSmenu.add_cascade(label="Salir", command=self.ventana.destroy)
+            ms_menu.add_cascade(label="Reservaciones", menu=menu_reservaciones)
+        ms_menu.add_cascade(label="Acerca de", command=self.acerca_de)
+        ms_menu.add_cascade(label="Salir", command=self.ventana.destroy)
         #endregion
 
 
         #region Submenu Cliente
         if self.tipo=="Admin":
-            menu_usuarios.add_command(label="Registrar Cliente", command=self.ventana_registrar_cliente)
-            menu_usuarios.add_command(label="Registrar Dueño", command=self.ventanaRegistraDueno)
-        if self.tipo == "Cliente" or self.tipo == "Admin":#Agrega las opciones que estaran en el boton de Clientes generado por MSmenu, mas genera la accion para el boton
-            menu_usuarios.add_command(label="Editar", command=self.ventana_editar_cliente)
-            menu_usuarios.add_command(label="Eliminar", command=self.ventana_eliminar_cliente)
-            menu_reservaciones.add_command(label="Registrar",command=self.ventanaRegistrarReserva)  # Agrega las opciones que estaran en el boton de Clientes generado por MSmenu, mas genera la accion para el boton
-            menu_reservaciones.add_command(label="Editar", command=self.ventanaEditarReserva)
-            menu_reservaciones.add_command(label="Eliminar", command=self.ventanaEliminarReserva)
+            menu_usuarios.add_command(label="Registrar Usuario", command=self.ventana_registrar_usuario)
+        if self.tipo == "Cliente" or self.tipo == "Admin":#Agrega las opciones que estaran en el boton de Usuario generado por MSmenu, mas genera la accion para el boton
+            menu_reservaciones.add_command(label="Registrar",command=self.ventanar_registrar_reserva)  # Agrega las opciones que estaran en el boton de Usuario generado por MSmenu, mas genera la accion para el boton
+            menu_reservaciones.add_command(label="Editar", command=self.ventana_editar_reserva)
+            menu_reservaciones.add_command(label="Eliminar", command=self.ventana_eliminar_reserva)
         if self.tipo == "Dueno" or self.tipo=="Admin":
-        # #Agrega las opciones que estaran en el boton de Clientes generado por MSmenu, mas genera la accion para el boton
-            menu_usuarios.add_command(label="Editar", command=self.ventanaEditarDueno)
-            menu_usuarios.add_command(label="Eliminar", command=self.ventana_eliminar_cliente)
-        #region Submenu propiedad
-            menu_propiedades.add_command(label="Registrar", command=self.ventanaRegistrarPropiedad) #Agrega las opciones que estaran en el boton de Clientes generado por MSmenu, mas genera la accion para el boton
-            menu_propiedades.add_command(label="Editar", command=self.ventanaEditarPropiedades)
-            menu_propiedades.add_command(label="Eliminar", command=self.ventanaEliminarPropiedad)
+            menu_propiedades.add_command(label="Registrar", command=self.ventana_registrar_propiedad) #Agrega las opciones que estaran en el boton de Usuario generado por MSmenu, mas genera la accion para el boton
+            menu_propiedades.add_command(label="Editar", command=self.ventanae_editar_propiedad)
+            menu_propiedades.add_command(label="Eliminar", command=self.ventana_eliminar_propiedad)
         #endregion
+        menu_usuarios.add_command(label="Editar", command=self.ventana_editar_usuario)
+        menu_usuarios.add_command(label="Eliminar", command=self.ventana_eliminar_usuario)
 
 
         #region Submenu Reservas
@@ -83,47 +75,35 @@ class PaginaPrincipal:
         tk.Label(ventana_acerca, text="II Cuatrimestre 2025").pack(pady=20)
     
 
-    def  ventana_registrar_cliente(self):
+    def  ventana_registrar_usuario(self):
         RegistrarUsuario(self.ventana)
 
-    def ventana_editar_cliente(self):
-        EditarCliente(self.ventana)
+    def ventana_editar_usuario(self):
+        EditarCliente(self.ventana, self.tipo, self.email)
 
-    def ventana_eliminar_cliente(self):
-        EliminarCliente(self.ventana, self.tipo, self.email)
-
-
-    #region ventana CRUD de dueños
-    def ventanaRegistraDueno (self):
-        RegistrarDueno(self.ventana)
-
-    def ventanaEditarDueno(self):
-        EditarDuenos(self.ventana)
-
-    def ventanaEliminarDueno(self):
-        EliminarDueno(self.ventana)
-    #endregion
+    def ventana_eliminar_usuario(self):
+        EliminarUsuario(self.ventana, self.tipo, self.email)
 
 
     #region ventana CRUD de propiedades
-    def ventanaRegistrarPropiedad (self):
+    def ventana_registrar_propiedad (self):
         RegistrarPropiedad(self.ventana)
 
-    def ventanaEditarPropiedades(self):
+    def ventanae_editar_propiedad(self):
         EditarPropiedades(self.ventana)
 
-    def ventanaEliminarPropiedad(self):
+    def ventana_eliminar_propiedad(self):
         EliminarPropiedades(self.ventana)
     #endregion
 
 
     #region ventana CRUD de Reservaciones
-    def ventanaRegistrarReserva (self):
+    def ventanar_registrar_reserva (self):
         RegistrarReservacion(self.ventana)
 
-    def ventanaEditarReserva(self):
+    def ventana_editar_reserva(self):
         EditarReservacion(self.ventana)
 
-    def ventanaEliminarReserva(self):
+    def ventana_eliminar_reserva(self):
         EliminarReservacion(self.ventana)
 #endregion

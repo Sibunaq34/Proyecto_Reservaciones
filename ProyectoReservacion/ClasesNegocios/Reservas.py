@@ -36,7 +36,7 @@ class Reservas:
 
     def leer_reserva(self):
         reserva = self.json_reservaciones.leer_reserva()
-        return reserva["Reservaciones"]["Clientes"]
+        return reserva["Reservaciones"]["Usuario"]
 
 
     def editar_reserva(self, id_reservacion, identificacion, id_sitio, fecha_entrada, fecha_salida, disponible, cantidad_personas, total):

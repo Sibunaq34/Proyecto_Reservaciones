@@ -64,6 +64,25 @@ class ArchivosUsuarios:
 
         return usuarios
 
+    def filtrar_usuarios(self, tipo, identificacion):
+        usuarios = []
+
+        if os.path.exists(self.ruta) and os.path.getsize(self.ruta) > 0:
+            tree = ET.parse(self.ruta)
+            raiz = tree.getroot()
+
+            for nodos in raiz.findall(tipo):
+                if identificacion in nodos.findtext("Identificacion", ""):
+                    usuarios.append({
+                        "Identificacion": nodos.findtext("Identificacion", ""),
+                        "Nombre": nodos.findtext("Nombre", ""),
+                        "Apellidos": nodos.findtext("Apellidos", ""),
+                        "Email": nodos.findtext("Email", ""),
+                        "Contrasena": nodos.findtext("Contrasena", ""),
+                    })
+
+        return usuarios
+
 
     def leer_clientes(self):
         usuarios = []

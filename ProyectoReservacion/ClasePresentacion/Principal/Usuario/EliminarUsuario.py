@@ -3,11 +3,13 @@ from tkinter import ttk
 from tkinter import messagebox
 from ClasesNegocios.Usuarios import Usuarios
 
-class RegistrarDueno(tk.Toplevel): 
+class EliminarUsuario(tk.Toplevel):
 
-    def __init__(self, master=None):
+    def __init__(self, master=None, tipo = None, identificacion = None):
         super().__init__(master)
-        self.title("Registrar Dueños")
+        self.tipo = tipo
+        self.identificacion = identificacion
+        self.title("Eliminar Usuario")
         w, h = self.winfo_screenwidth(), self.winfo_screenheight()
         self.geometry("%dx%d+0+0" % (w,h))
         self.config(bg="#fcfcfc")
@@ -28,6 +30,7 @@ class RegistrarDueno(tk.Toplevel):
         self.tabla.heading("col5", text= "CONTRASENA")
         self.tabla.heading("col6", text="TIPO_DE_USUARIO")
         self.tabla["show"] = "headings"
+        self.tabla.bind("<ButtonRelease-1>", self.seleccionar_usuario)
 
         lblid = tk.Label(self, text="ID:",font=("Times", 14), fg="#666a88", anchor="w")
         lblid.grid(row=2,column=0, sticky="W")
@@ -53,60 +56,72 @@ class RegistrarDueno(tk.Toplevel):
         lbl_contrasena.grid(row=6,column=0, sticky="W")
         self.txt_contrasena = tk.Entry(self)
         self.txt_contrasena.grid(row=6,column=1, sticky="W")
-        
-        self.btn_registrar = tk.Button(self, text="Registrar Dueño", command= self.registrarDuenos, bg="#666a88", fg="#fcfcfc")
-        self.btn_registrar.grid(row=8, columnspan=2, sticky=("W"))
-        self.mostrarDatos()
 
-    def limpiarCampos(self):
+
+        self.btn_eliminar = tk.Button(self, text="Eliminar Cliente", command= self.eliminar_usuario, bg="#666a88", fg="#fcfcfc")
+        self.btn_eliminar.grid(row=8, columnspan=2, sticky="W")
+        self.mostrar_datos()
+
+    
+    def limpiar_campos(self):
         self.txt_id.delete(0, tk.END)
         self.txt_nombre.delete(0, tk.END)
         self.txt_apellido.delete(0, tk.END)
         self.txt_email.delete(0, tk.END)
         self.txt_contrasena.delete(0, tk.END)
 
+    def mostrar_datos(self):
 
-    def mostrarDatos(self):
-
-        duenos= Usuarios()
-        duenos = duenos.leer_duenos()
+        usuarios= Usuarios()
+        if self.tipo == "Admin":
+            usuarios= usuarios.leer_usuarios()
+        elif self.tipo == "Cliente":
+            usuarios = usuarios.filtrar_usuarios(self.tipo, self.identificacion)
+        elif self.tipo == "Dueno":
+            usuarios = usuarios.filtrar_usuarios(self.tipo, self.identificacion)
         
-        for dueno in duenos:
+        for usuario in usuarios:
             self.tabla.insert("",tk.END, values=(
-                dueno.get("Identificacion", ""),
-                dueno.get("Nombre",""),
-                dueno.get("Apellidos",""),
-                dueno.get("Email", ""),
-                dueno.get("Contrasena",""),
-                dueno.get("Tipo", "")
+                usuario.get("Identificacion", ""),
+                usuario.get("Nombre",""),
+                usuario.get("Apellidos",""),
+                usuario.get("Email", ""),
+                usuario.get("Contrasena",""),
+                usuario.get("Tipo", "")
             ))
     
-    def registrarDuenos (self):
+    def seleccionar_usuario(self, event):
+        item = self.tabla.focus()
+        if item:
+            valores = self.tabla.item(item, "values")
+            self.txt_id.delete(0, tk.END)
+            self.txt_id.insert(0, valores[0])
+            self.txt_nombre.delete(0, tk.END)
+            self.txt_nombre.insert(0, valores[1])
+            self.txt_apellido.delete(0, tk.END)
+            self.txt_apellido.insert(0, valores[2])
+            self.txt_email.delete(0, tk.END)
+            self.txt_email.insert(0, valores[3])
+            self.txt_contrasena.delete(0, tk.END)
+            self.txt_contrasena.insert(0, valores[4])
+
+
+    def eliminar_usuario (self):
 
         try:
-            if self.txt_id.get() and self.txt_nombre.get() and self.txt_apellido.get() and self.txt_email.get() and self.txt_contrasena.get():
-                cliente = Usuarios()
-                identificacion = int(self.txt_id.get())
-                nombre = self.txt_nombre.get()
-                apellido = self.txt_apellido.get()
-                email = self.txt_email.get()
-                contrasena = self.txt_contrasena.get()
-                tipo = "Dueno"
-                cliente.registrar_usuario(tipo, identificacion, nombre, apellido, email, contrasena)
-                self.mostrarDatos()
-                self.limpiarCampos()
-                messagebox.showinfo(title="Listo", message="Se ha registrado correctamente al Cliente")
+            usuarios = Usuarios()
+
+            if not self.txt_id.get():
+                messagebox.showerror(title="Error", message="Debe de seleccionar un cliente para eliminar")
+            tipo = self.tipo
+            if usuarios.eliminar_usuario(tipo, int(self.txt_id.get())):
+                messagebox.showinfo(title="Hecho", message="Se ha eliminado correctamente al cliente")
+                self.mostrar_datos()
+                self.limpiar_campos()
                 self.destroy()
+
             else:
-                messagebox.showerror("Error, los campos no pueden estar vacios")
+                messagebox.showerror(title= "Error", message="No se ha podido eliminar al cliente")
         except Exception as e:
-            messagebox.showerror(message={e},title="Ha ocurrido un error:")
-
-
-
-
-
-
-
-
-
+                messagebox.showerror(message=str(e), title="Ha ocurrido un error:")
+                self.destroy()

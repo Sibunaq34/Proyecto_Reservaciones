@@ -3,11 +3,13 @@ from tkinter import ttk
 from tkinter import messagebox
 from ClasesNegocios.Usuarios import Usuarios
 
-class EditarDuenos(tk.Toplevel): 
+class EditarCliente(tk.Toplevel): 
 
-    def __init__(self, master=None):
+    def __init__(self, master=None, tipo = None, identificacion = None):
         super().__init__(master)
-        self.title("Editar Dueños")
+        self.tipo = tipo
+        self.identificacion = identificacion
+        self.title("Editar Usuario")
         w, h = self.winfo_screenwidth(), self.winfo_screenheight()
         self.geometry("%dx%d+0+0" % (w,h))
         self.config(bg="#fcfcfc")
@@ -28,7 +30,7 @@ class EditarDuenos(tk.Toplevel):
         self.tabla.heading("col5", text= "CONTRASENA")
         self.tabla.heading("col6", text="TIPO_DE_USUARIO")
         self.tabla["show"] = "headings"
-        self.tabla.bind("<ButtonRelease-1>", self.seleccionarUsuarioTabla)
+        self.tabla.bind("<ButtonRelease-1>", self.seleccionar_usuario_tabla)
 
         lblid = tk.Label(self, text="ID:",font=("Times", 14), fg="#666a88", anchor="w")
         lblid.grid(row=2,column=0, sticky="W")
@@ -54,34 +56,39 @@ class EditarDuenos(tk.Toplevel):
         lbl_contrasena.grid(row=6,column=0, sticky="W")
         self.txt_contrasena = tk.Entry(self)
         self.txt_contrasena.grid(row=6,column=1, sticky="W")
-        
-        self.btn_editar = tk.Button(self, text="Editar Dueño", command= self.editarDuenos, bg="#666a88", fg="#fcfcfc")
-        self.btn_editar.grid(row=8, columnspan=2, sticky=("W"))
-        self.mostrarDatos()
 
-    def limpiarCampos(self):
+        self.btn_editar = tk.Button(self, text="Editar Usuario", command= self.editar_usuario, bg="#666a88", fg="#fcfcfc")
+        self.btn_editar.grid(row=8, columnspan=2, sticky="W")
+        self.mostrar_datos()
+
+    def limpiar_campos(self):
         self.txt_id.delete(0, tk.END)
         self.txt_nombre.delete(0, tk.END)
         self.txt_apellido.delete(0, tk.END)
         self.txt_email.delete(0, tk.END)
         self.txt_contrasena.delete(0, tk.END)
 
-    def mostrarDatos(self):
+    def mostrar_datos(self):
 
-        duenos = Usuarios()
-        duenos = duenos.leer_duenos()
+        usuarios= Usuarios()
+        if self.tipo == "Admin":
+            usuarios= usuarios.leer_usuarios()
+        elif self.tipo == "Cliente":
+            usuarios = usuarios.filtrar_usuarios(self.tipo, self.identificacion)
+        elif self.tipo == "Dueno":
+            usuarios = usuarios.filtrar_usuarios(self.tipo, self.identificacion)
         
-        for dueno in duenos:
+        for usuario in usuarios:
             self.tabla.insert("",tk.END, values=(
-                dueno.get("Identificacion", ""),
-                dueno.get("Nombre",""),
-                dueno.get("Apellidos",""),
-                dueno.get("Email", ""),
-                dueno.get("Contrasena",""),
-                dueno.get("Tipo", "")
+                usuario.get("Identificacion", ""),
+                usuario.get("Nombre",""),
+                usuario.get("Apellidos",""),
+                usuario.get("Email", ""),
+                usuario.get("Contrasena",""),
+                usuario.get("Tipo", "")
             ))
     
-    def seleccionarUsuarioTabla(self, event):
+    def seleccionar_usuario_tabla(self, event):
         item = self.tabla.focus()
         if item:
             valores = self.tabla.item(item, "values")
@@ -97,24 +104,23 @@ class EditarDuenos(tk.Toplevel):
             self.txt_contrasena.insert(0, valores[4])
 
     
-    def editarDuenos (self):
+    def editar_usuario (self):
         try:
             usuario = Usuarios()
             if not self.txt_id.get():
                 messagebox.showerror(title="Error", message="Debe de seleccionar un usuario")
                 return
-
-            tipo = "Dueno"
-            if usuario.editar_usuario(tipo, int(self.txt_id.get()), self.txt_nombre.get(), self.txt_apellido.get(),
-                                      self.txt_email.get(), self.txt_contrasena.get()):
+        
+            tipo = self.tipo
+            if usuario.editar_usuario(tipo,int(self.txt_id.get()),self.txt_nombre.get(),self.txt_apellido.get(),self.txt_email.get(),self.txt_contrasena.get()):
                 messagebox.showinfo(title="Listo", message="Se ha editado correctamente al cliente")
-                self.mostrarDatos()
-                self.limpiarCampos()
+                self.mostrar_datos()
+                self.limpiar_campos()
                 self.destroy()
             else:
                 messagebox.showerror(title="Error", message="No se ha podido editar el cliente")
         except Exception as e:
-            messagebox.showerror(message=str(e), title="Ha ocurrido un error:")
+            messagebox.showerror(message=str(e),title="Ha ocurrido un error:")
             self.destroy()
 
 

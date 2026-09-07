@@ -9,7 +9,7 @@ class JsonReservaciones:
         if not os.path.exists(self.archivo):
             estructura = {
                 "Reservaciones":{
-                    "Clientes":[]
+                    "Usuario":[]
                 }
             }
             with open(self.archivo, "w", encoding="utf-8") as f:
@@ -20,7 +20,7 @@ class JsonReservaciones:
 
         datos = self.leer_reserva()
 
-        lista_reservaciones = datos["Reservaciones"]["Clientes"]
+        lista_reservaciones = datos["Reservaciones"]["Usuario"]
         if lista_reservaciones:
             id_reservacion = max(cliente["ID de la Reservacion"] for cliente in lista_reservaciones)+1
         else:
@@ -53,7 +53,7 @@ class JsonReservaciones:
                        fecha_salida, disponible, cantidad_personas, total):
 
         datos = self.leer_reserva()
-        lista_reservaciones = datos["Reservaciones"]["Clientes"]
+        lista_reservaciones = datos["Reservaciones"]["Usuario"]
 
         for reservacion in lista_reservaciones:
             if reservacion["ID de la Reservacion"]  == id_reservacion:
@@ -72,7 +72,7 @@ class JsonReservaciones:
     def eliminar_reserva(self,id_reserva):
 
         datos = self.leer_reserva()
-        lista_reservaciones = datos["Reservaciones"]["Clientes"]
+        lista_reservaciones = datos["Reservaciones"]["Usuario"]
 
         for i, reservacion in enumerate(lista_reservaciones):
             if reservacion["ID de la Reservacion"] == id_reserva:
@@ -87,7 +87,7 @@ class JsonReservaciones:
     def validacion_fecha(self, id_sitio, fecha_entrada, fecha_salida,
                          identificacion=None):
         datos = self.leer_reserva()
-        lista_reservaciones = datos["Reservaciones"]["Clientes"]
+        lista_reservaciones = datos["Reservaciones"]["Usuario"]
 
         for reservacion in lista_reservaciones:
             es_reserva_actual = (
@@ -110,7 +110,7 @@ class JsonReservaciones:
     def buscar_reserva(self, identificacion, id_sitio, fecha_entrada, fecha_salida):
 
         leer_reservaciones = self.leer_reserva()
-        lista_reservaciones = leer_reservaciones["Reservaciones"]["Clientes"]
+        lista_reservaciones = leer_reservaciones["Reservaciones"]["Usuario"]
 
         for reservacion in lista_reservaciones:
             if (reservacion["Identificacion"] == str(identificacion) and
