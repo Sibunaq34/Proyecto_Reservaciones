@@ -51,7 +51,7 @@ class JsonPropiedad:
 
         datos = self.leer_propiedades()
         lista_propiedades = datos["propiedades"]["usuario"]
-        id_sitio == int(id_sitio)
+
         for propiedad in lista_propiedades:
             if propiedad["ID del sitio"] == int(id_sitio):
                 propiedad["ID del sitio"] = int(id_sitio)

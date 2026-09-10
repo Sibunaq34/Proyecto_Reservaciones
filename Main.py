@@ -1,5 +1,5 @@
 import os
-from ClaseFormularios.InicioSesion.Logica import *
+from ClasePresentacion.InicioSesion.Logica import *
 
 def borrarPantalla(): 
     if os.name == "posix":

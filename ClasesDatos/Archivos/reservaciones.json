@@ -2,22 +2,34 @@
     "Reservaciones": {
         "Clientes": [
             {
+                "ID de la Reservacion": 1,
                 "Identificacion": "305280498",
-                "ID del Sitio": 124,
-                "Fecha de entrada": "11/11/2026",
-                "Fecha de salida": "16/11/2026",
+                "ID Sitio": 124,
+                "Fecha de entrada": "15/11/2026",
+                "Fecha de salida": "18/11/2026",
                 "Disponibilidad": "No",
-                "Cantidad de personas": 5000,
-                "Total": 25000
+                "Cantidad de personas": 5,
+                "Total": 15000
             },
             {
+                "ID de la Reservacion": 2,
                 "Identificacion": "305280498",
-                "ID del Sitio": 124,
-                "Fecha de entrada": "17/11/2026",
-                "Fecha de salida": "19/11/2026",
+                "ID Sitio": 124,
+                "Fecha de entrada": "12/12/2026",
+                "Fecha de salida": "25/12/2026",
                 "Disponibilidad": "No",
-                "Cantidad de personas": 3,
-                "Total": 10000
+                "Cantidad de personas": 4,
+                "Total": 65000
+            },
+            {
+                "ID de la Reservacion": 3,
+                "Identificacion": "305290499",
+                "ID Sitio": 124,
+                "Fecha de entrada": "26/12/2026",
+                "Fecha de salida": "1/1/2027",
+                "Disponibilidad": "No",
+                "Cantidad de personas": 4,
+                "Total": 30000
             }
         ]
     }

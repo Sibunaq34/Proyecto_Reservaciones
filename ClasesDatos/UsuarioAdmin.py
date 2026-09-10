@@ -3,7 +3,7 @@ import os
 class UsuarioAdmin:
 
     def __init__(self):
-        self.ruta_archivo = os.path.join(os.path.dirname(__file__), '../ClasesDatos/Datos/Usuarios.txt')
+        self.ruta_archivo = os.path.join(os.path.dirname(__file__), 'Archivos/Usuarios.txt')
 
     def buscar_usuario(self, email, contrasena):
         try:

@@ -4,11 +4,20 @@
             {
                 "Identificacion": "305280498",
                 "ID del sitio": 124,
-                "Tipo de Propiedad": "Oficina",
-                "Ubicacion": "Cartago",
+                "Tipo de Propiedad": "Casa",
+                "Ubicacion": "San Jose",
                 "Cantidad maxima de personas": 5,
                 "Precio por noche": 5000,
-                "Contacto": "63368175"
+                "Contacto": 63368175
+            },
+            {
+                "Identificacion": "305280498",
+                "ID del sitio": 124,
+                "Tipo de Propiedad": "Casa",
+                "Ubicacion": "San Jose",
+                "Cantidad maxima de personas": 5,
+                "Precio por noche": 5000,
+                "Contacto": 63368175
             }
         ]
     }

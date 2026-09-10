@@ -1,2 +1,0 @@
-Identificacion: 305280498, Nombre: Antony, Apellido: Cervantes, Email: admin, Contrasena: 1234, Tipo de usuario: admin
-
