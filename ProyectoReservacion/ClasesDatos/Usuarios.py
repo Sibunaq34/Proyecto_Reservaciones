@@ -212,6 +212,21 @@ class ArchivosUsuarios:
         
         return None
 
+    def validar_usuario(self, tipo, identificacion):
+        clientes = self.leer_clientes()
+        duenos = self.leer_duenos()
+
+        if tipo == "Cliente":
+            for cliente in clientes:
+                if cliente["Identificacion"] == identificacion:
+                    return cliente["Identificacion"]
+        elif tipo == "Dueno":
+            for dueno in duenos:
+                if dueno["Identificacion"] == identificacion:
+                    return dueno["Identificacion"]
+
+        return None
+
     
 
 

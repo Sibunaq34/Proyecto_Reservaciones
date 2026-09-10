@@ -7,8 +7,10 @@ from ClasesNegocios.Reservas import Reservas
 
 class EditarReservacion(tk.Toplevel):
 
-    def __init__(self, master=None):
+    def __init__(self, master=None, tipo = None, identificacion = None):
         super().__init__(master)
+        self.tipo = tipo
+        self.identificacion = identificacion
         self.precio = 0
         self.title("Editar Reservacion")
         w, h = self.winfo_screenwidth(), self.winfo_screenheight()
@@ -33,7 +35,7 @@ class EditarReservacion(tk.Toplevel):
         self.tabla.heading("col7", text="Cantidad de personas")
         self.tabla.heading("col8", text="Total")
         self.tabla["show"] = "headings"
-        self.tabla.bind("<ButtonRelease-1>", self.seleccionarReservacionTabla)
+        self.tabla.bind("<ButtonRelease-1>", self.seleccionar_reservacion_tabla)
 
 
         lbl_id_reserva = tk.Label(self, text="ID de la Reservacion:", font=("Times", 14), fg="#666a88", anchor="w")
@@ -74,22 +76,27 @@ class EditarReservacion(tk.Toplevel):
 
         self.btn_editar = tk.Button(self, text="Editar Reservacion", command=self.editar_reservacion, bg="#666a88",
                                        fg="#fcfcfc")
-        self.btn_editar.grid(row=9, columnspan=2, sticky=("W"))
+        self.btn_editar.grid(row=9, columnspan=2, sticky="W")
 
-        self.mostrarReservacion()
+        self.mostrar_reservacion()
 
-    def limpiarCampos(self):
-        self.txt_id_reservacion.delete(0, tk.END)
+
+    def limpiar_campos(self):
+        self.txt_id_reserva.delete(0, tk.END)
         self.txt_id.delete(0, tk.END)
         self.txt_id_sitio.delete(0, tk.END)
         self.txt_fecha_entrada.delete(0, tk.END)
         self.txt_fecha_salida.delete(0, tk.END)
         self.txt_cantidad_personas.delete(0, tk.END)
 
-    def mostrarReservacion(self):
 
-        reservacion = Reservas()
-        reservaciones = reservacion.leer_reserva()
+    def mostrar_reservacion(self):
+
+        reservaciones = Reservas()
+        if self.tipo == "Admin":
+            reservaciones = reservaciones.leer_reserva()
+        else:
+            reservaciones = reservaciones.filtrar_reservas(self.identificacion)
 
         for item in self.tabla.get_children():
             self.tabla.delete(item)
@@ -106,7 +113,7 @@ class EditarReservacion(tk.Toplevel):
                 reserva.get("Total", "")
             ))
 
-    def seleccionarReservacionTabla(self, event):
+    def seleccionar_reservacion_tabla(self, event):
         item = self.tabla.focus()
         if item:
             valores = self.tabla.item(item, "values")
@@ -122,6 +129,7 @@ class EditarReservacion(tk.Toplevel):
             self.txt_fecha_salida.insert(0, valores[4])
             self.txt_cantidad_personas.delete(0, tk.END)
             self.txt_cantidad_personas.insert(0, valores[6])
+
 
     def editar_reservacion(self):
         try:
@@ -139,11 +147,9 @@ class EditarReservacion(tk.Toplevel):
             if reservaciones.editar_reserva(id_reserva, identificacion, id_sitio, fecha_entrada, fecha_salida, disponible,
                                             cantidad_personas, self.precio):
                 messagebox.showinfo("Éxito", "La reservació se edito correctamente.")
-                self.mostrarReservacion()
-                self.limpiarCampos()
+                self.mostrar_reservacion()
+                self.limpiar_campos()
 
         except Exception as e:
             messagebox.showerror(message=str(e), title="Ha ocurrido un error:")
             self.destroy()
-
-

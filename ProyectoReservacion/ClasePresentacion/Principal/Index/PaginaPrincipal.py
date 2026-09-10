@@ -13,9 +13,9 @@ from ClasePresentacion.Principal.Reservaciones.EditarRerservacion import *
 
 class PaginaPrincipal: 
     
-    def __init__(self, tipo, email):
+    def __init__(self, tipo, identificacion):
         self.tipo = tipo
-        self.email = email
+        self.identificacion = identificacion
         self.ventana = tk.Tk()
         self.ventana.title("Paginal Principal")
         w, h = self.ventana.winfo_screenwidth(), self.ventana.winfo_screenheight()
@@ -79,10 +79,10 @@ class PaginaPrincipal:
         RegistrarUsuario(self.ventana)
 
     def ventana_editar_usuario(self):
-        EditarCliente(self.ventana, self.tipo, self.email)
+        EditarCliente(self.ventana, self.tipo, self.identificacion)
 
     def ventana_eliminar_usuario(self):
-        EliminarUsuario(self.ventana, self.tipo, self.email)
+        EliminarUsuario(self.ventana, self.tipo, self.identificacion)
 
 
     #region ventana CRUD de propiedades
@@ -102,8 +102,8 @@ class PaginaPrincipal:
         RegistrarReservacion(self.ventana)
 
     def ventana_editar_reserva(self):
-        EditarReservacion(self.ventana)
+        EditarReservacion(self.ventana, self.tipo, self.identificacion)
 
     def ventana_eliminar_reserva(self):
-        EliminarReservacion(self.ventana)
+        EliminarReservacion(self.ventana, self.tipo, self.identificacion)
 #endregion

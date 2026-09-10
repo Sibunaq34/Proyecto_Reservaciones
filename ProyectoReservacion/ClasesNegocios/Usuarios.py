@@ -56,3 +56,7 @@ class Usuarios:
 
     def buscar_usuario(self, tipo, email):
         return self.xml_clientes.buscar_usuario(tipo, email)
+
+
+    def validar_usuario(self, tipo, identificacion):
+        return self.xml_clientes.validar_usuario(tipo, identificacion)
