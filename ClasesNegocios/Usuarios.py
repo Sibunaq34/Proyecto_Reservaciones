@@ -59,4 +59,4 @@ class Usuarios:
 
 
     def validar_usuario(self, tipo, identificacion):
-        return self.xml_clientes.validar_usuario(tipo, identificacion)
+        return self.xml_clientes.validar_usuario(tipo, str(identificacion))

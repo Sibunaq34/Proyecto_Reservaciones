@@ -66,4 +66,4 @@ class Reservas:
 
     
     def filtrar_reservas(self, identificacion):
-        return self.json_reservaciones.filtrar_reservas(identificacion)
+        return self.json_reservaciones.filtrar_reservas(str(identificacion))

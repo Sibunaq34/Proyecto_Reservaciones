@@ -30,6 +30,16 @@
                 "Disponibilidad": "No",
                 "Cantidad de personas": 4,
                 "Total": 30000
+            },
+            {
+                "ID de la Reservacion": 4,
+                "Identificacion": "305280498",
+                "ID Sitio": 124,
+                "Fecha de entrada": "12/6/2026",
+                "Fecha de salida": "17/6/2026",
+                "Disponibilidad": "No",
+                "Cantidad de personas": 3,
+                "Total": 25000
             }
         ]
     }

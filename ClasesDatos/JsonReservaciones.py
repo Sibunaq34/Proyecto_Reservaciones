@@ -124,8 +124,11 @@ class JsonReservaciones:
     def filtrar_reservas(self, identificacion):
         reservaciones = self.leer_reserva()
         reservaciones = reservaciones["Reservaciones"]["Clientes"]
+        reservas = []
 
         for reservacion in reservaciones:
             if reservacion["Identificacion"] == str(identificacion):
-                return reservacion
-        return None
+                reservas.append(reservacion)
+        return reservas
+
+        
